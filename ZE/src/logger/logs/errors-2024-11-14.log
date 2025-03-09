@@ -1,0 +1,18 @@
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 10:33:01"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 10:35:55"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 10:43:24"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 10:50:36"}
+{"label":"src/app.js","level":"error","message":{"error":{"address":"169.254.169.254","code":"CredentialsError","errno":-113,"message":"Missing credentials in config, if using AWS_CONFIG_FILE, set AWS_SDK_LOAD_CONFIG=1","originalError":{"address":"169.254.169.254","code":"CredentialsError","errno":-113,"message":"Could not load credentials from any providers","originalError":{"address":"169.254.169.254","code":"EHOSTUNREACH","errno":-113,"message":"EC2 Metadata roleName request returned error","originalError":{"address":"169.254.169.254","code":"EHOSTUNREACH","errno":-113,"message":"connect EHOSTUNREACH 169.254.169.254:80","port":80,"syscall":"connect"},"port":80,"syscall":"connect","time":"2024-11-14T05:09:25.571Z"},"port":80,"syscall":"connect","time":"2024-11-14T05:09:25.572Z"},"port":80,"syscall":"connect","time":"2024-11-14T05:09:25.572Z"},"method":"uploadDocument","userInfo":{"user":{}}},"timestamp":"2024-11-14 10:54:25"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 10:58:10"}
+{"label":"src/app.js","level":"error","message":{"error":{},"method":"uploadDocument"},"timestamp":"2024-11-14 10:58:12"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 10:58:30"}
+{"label":"src/app.js","level":"error","message":{"error":{"address":"169.254.169.254","code":"CredentialsError","errno":-113,"message":"Missing credentials in config, if using AWS_CONFIG_FILE, set AWS_SDK_LOAD_CONFIG=1","originalError":{"address":"169.254.169.254","code":"CredentialsError","errno":-113,"message":"Could not load credentials from any providers","originalError":{"address":"169.254.169.254","code":"EHOSTUNREACH","errno":-113,"message":"EC2 Metadata roleName request returned error","originalError":{"address":"169.254.169.254","code":"EHOSTUNREACH","errno":-113,"message":"connect EHOSTUNREACH 169.254.169.254:80","port":80,"syscall":"connect"},"port":80,"syscall":"connect","time":"2024-11-14T05:13:38.886Z"},"port":80,"syscall":"connect","time":"2024-11-14T05:13:38.888Z"},"port":80,"syscall":"connect","time":"2024-11-14T05:13:38.888Z"},"method":"uploadDocument","userInfo":{"user":{}}},"timestamp":"2024-11-14 10:58:38"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 11:00:15"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 11:03:12"}
+{"label":"src/app.js","level":"error","message":{"error":{},"method":"uploadDocument","userInfo":{"user":{}}},"timestamp":"2024-11-14 11:03:45"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 11:05:30"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 11:07:18"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 11:10:12"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 11:12:49"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 11:13:24"}
+{"label":"src/app.js","level":"error","message":"This is test message","timestamp":"2024-11-14 11:14:24"}

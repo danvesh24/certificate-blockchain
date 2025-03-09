@@ -1,0 +1,5 @@
+Installed chaincodes on peer:
+Package ID: Certificate_1:358c911e92468143366fcc4a4f954d3a870c3d55cc96639f1dfd3086ae9ccd3e, Label: Certificate_1
+Package ID: Company_1:de2ea21d6fa1fd34d4764e9f0aeee3ed5fbab66f5876b0a1893b37d1f2876733, Label: Company_1
+Package ID: Customer_1:730bc5eb72dc99431b5a3c85543e5643541c690475519d72aaa2c3581a2fb3da, Label: Customer_1
+Package ID: Batch_1:ef4249a3473ddc34d5d23073e106a136825b426e9473a6d5cb3c72ed33bf31d2, Label: Batch_1

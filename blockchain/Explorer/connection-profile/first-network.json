@@ -1,0 +1,50 @@
+{
+	"name": "test-network",
+	"version": "1.0.0",
+	"client": {
+		"tlsEnable": true,
+		"adminCredential": {
+			"id": "exploreradmin",
+			"password": "exploreradminpw"
+		},
+		"enableAuthentication": true,
+		"organization": "SuperadminMSP",
+		"connection": {
+			"timeout": {
+				"peer": {
+					"endorser": "300"
+				},
+				"orderer": "300"
+			}
+		}
+	},
+	"channels": {
+		"mychannel": {
+			"peers": {
+				"peer0.superadmin.productauth.com": {}
+			}
+		}
+	},
+  "organizations": {
+		"SuperadminMSP": {
+			"mspid": "SuperadminMSP",
+			"adminPrivateKey": {
+				"path": "/etc/data/peerOrganizations/superadmin.productauth.com/users/Admin@superadmin.productauth.com/msp/keystore/priv_sk"
+			},
+			"peers": [
+				["peer0.superadmin.productauth.com"]
+			],
+			"signedCert": {
+				"path": "/etc/data/peerOrganizations/superadmin.productauth.com/users/Admin@superadmin.productauth.com/msp/signcerts/cert.pem"
+			}
+		}
+	},
+  "peers": {
+		"peer0.superadmin.productauth.com": {
+			"tlsCACerts": {
+				"path": "/etc/data/peerOrganizations/superadmin.productauth.com/peers/peer0.superadmin.productauth.com/tls/ca.crt"
+			},
+			"url": "grpcs://peer0.superadmin.productauth.com:7051"
+		}
+	}
+}
