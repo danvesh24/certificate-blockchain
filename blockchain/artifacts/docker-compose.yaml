@@ -4,8 +4,8 @@ networks:
   test:
 
 services:
-  orderer.productauth.com:
-    container_name: orderer.productauth.com
+  orderer.certs.com:
+    container_name: orderer.certs.com
     image: hyperledger/fabric-orderer:2.5.0
     environment:
       - FABRIC_LOGGING_SPEC=INFO
@@ -33,7 +33,7 @@ services:
 
       - ORDERER_GENERAL_LISTENPORT=7050
       - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:7053
-      - ORDERER_OPERATIONS_LISTENADDRESS=orderer.productauth.com:8443
+      - ORDERER_OPERATIONS_LISTENADDRESS=orderer.certs.com:8443
     working_dir: /root
     command: orderer
     ports:
@@ -43,11 +43,11 @@ services:
     networks:
       - test
     volumes:
-      - ./channel/crypto-config/ordererOrganizations/productauth.com/orderers/orderer.productauth.com/msp:/var/hyperledger/orderer/msp
-      - ./channel/crypto-config/ordererOrganizations/productauth.com/orderers/orderer.productauth.com/tls:/var/hyperledger/orderer/tls
+      - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/msp:/var/hyperledger/orderer/msp
+      - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/tls:/var/hyperledger/orderer/tls
 
-  orderer2.productauth.com:
-    container_name: orderer2.productauth.com
+  orderer2.certs.com:
+    container_name: orderer2.certs.com
     image: hyperledger/fabric-orderer:2.5.0
     environment:
       - FABRIC_LOGGING_SPEC=INFO
@@ -75,7 +75,7 @@ services:
 
       - ORDERER_GENERAL_LISTENPORT=7050
       - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:8053
-      - ORDERER_OPERATIONS_LISTENADDRESS=orderer2.productauth.com:8443
+      - ORDERER_OPERATIONS_LISTENADDRESS=orderer2.certs.com:8443
 
     working_dir: /root
     command: orderer
@@ -86,11 +86,11 @@ services:
     networks:
       - test
     volumes:
-      - ./channel/crypto-config/ordererOrganizations/productauth.com/orderers/orderer2.productauth.com/msp:/var/hyperledger/orderer/msp
-      - ./channel/crypto-config/ordererOrganizations/productauth.com/orderers/orderer2.productauth.com/tls:/var/hyperledger/orderer/tls
+      - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer2.certs.com/msp:/var/hyperledger/orderer/msp
+      - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer2.certs.com/tls:/var/hyperledger/orderer/tls
 
-  orderer3.productauth.com:
-    container_name: orderer3.productauth.com
+  orderer3.certs.com:
+    container_name: orderer3.certs.com
     image: hyperledger/fabric-orderer:2.5.0
     environment:
       - FABRIC_LOGGING_SPEC=INFO
@@ -117,7 +117,7 @@ services:
       - ORDERER_METRICS_PROVIDER=prometheus
       - ORDERER_GENERAL_LISTENPORT=7050
       - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:9053
-      - ORDERER_OPERATIONS_LISTENADDRESS=orderer3.productauth.com:8443
+      - ORDERER_OPERATIONS_LISTENADDRESS=orderer3.certs.com:8443
     working_dir: /root
     command: orderer
     ports:
@@ -127,8 +127,8 @@ services:
     networks:
       - test
     volumes:
-      - ./channel/crypto-config/ordererOrganizations/productauth.com/orderers/orderer3.productauth.com/msp:/var/hyperledger/orderer/msp
-      - ./channel/crypto-config/ordererOrganizations/productauth.com/orderers/orderer3.productauth.com/tls:/var/hyperledger/orderer/tls
+      - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer3.certs.com/msp:/var/hyperledger/orderer/msp
+      - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer3.certs.com/tls:/var/hyperledger/orderer/tls
 
   couchdb0:
     container_name: couchdb0
@@ -163,8 +163,8 @@ services:
     networks:
       - test
 
-  peer0.superadmin.productauth.com:
-    container_name: peer0.superadmin.productauth.com
+  peer0.superadmin.certs.com:
+    container_name: peer0.superadmin.certs.com
     image: hyperledger/fabric-peer:2.5.0
     labels:
       service: hyperledger-fabric
@@ -175,15 +175,15 @@ services:
       - CORE_PEER_LOCALMSPID=SuperadminMSP
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_test
 
-      - CORE_PEER_ID=peer0.superadmin.productauth.com
-      - CORE_PEER_ADDRESS=peer0.superadmin.productauth.com:7051
+      - CORE_PEER_ID=peer0.superadmin.certs.com
+      - CORE_PEER_ADDRESS=peer0.superadmin.certs.com:7051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.superadmin.productauth.com:7052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.superadmin.certs.com:7052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
       # Peer used to bootstrap gossip within organisation
-      # - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.superadmin.productauth.com:8051
+      # - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.superadmin.certs.com:8051
       # Exposed for discovery Service
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.superadmin.productauth.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.superadmin.certs.com:7051
 
       # - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9440
 
@@ -202,14 +202,14 @@ services:
     ports:
       - 7051:7051
     volumes:
-      - ./channel/crypto-config/peerOrganizations/superadmin.productauth.com/peers/peer0.superadmin.productauth.com:/etc/hyperledger/fabric
+      - ./channel/crypto-config/peerOrganizations/superadmin.certs.com/peers/peer0.superadmin.certs.com:/etc/hyperledger/fabric
       - /var/run/:/host/var/run/
     networks:
       - test
 
 
   peer0.company..com:
-    container_name: peer0.company.productauth.com
+    container_name: peer0.company.certs.com
     image: hyperledger/fabric-peer:2.5.0
     labels:
       service: hyperledger-fabric
@@ -221,13 +221,13 @@ services:
 
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_test
 
-      - CORE_PEER_ID=peer0.company.productauth.com
-      - CORE_PEER_ADDRESS=peer0.company.productauth.com:9051
+      - CORE_PEER_ID=peer0.company.certs.com
+      - CORE_PEER_ADDRESS=peer0.company.certs.com:9051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.company.productauth.com:9052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.company.certs.com:9052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
       # Exposed for discovery Service
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.company.productauth.com:9051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.company.certs.com:9051
       # - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.company.example.com:10051
 
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
@@ -243,13 +243,13 @@ services:
     ports:
       - 9051:9051
     volumes:
-      - ./channel/crypto-config/peerOrganizations/company.productauth.com/peers/peer0.company.productauth.com:/etc/hyperledger/fabric
+      - ./channel/crypto-config/peerOrganizations/company.certs.com/peers/peer0.company.certs.com:/etc/hyperledger/fabric
       - /var/run/:/host/var/run/
     networks:
       - test
 
-  peer0.retailer.productauth.com:
-    container_name: peer0.retailer.productauth.com
+  peer0.retailer.certs.com:
+    container_name: peer0.retailer.certs.com
     image: hyperledger/fabric-peer:2.5.0
     labels:
       service: hyperledger-fabric
@@ -261,13 +261,13 @@ services:
 
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_test
 
-      - CORE_PEER_ID=peer0.retailer.productauth.com
-      - CORE_PEER_ADDRESS=peer0.retailer.productauth.com:10051
+      - CORE_PEER_ID=peer0.retailer.certs.com
+      - CORE_PEER_ADDRESS=peer0.retailer.certs.com:10051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:10051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.retailer.productauth.com:10052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.retailer.certs.com:10052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10052
       # Exposed for discovery Service
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.retailer.productauth.com:10051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.retailer.certs.com:10051
       # - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.company.example.com:10051
 
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
@@ -283,7 +283,7 @@ services:
     ports:
       - 10051:10051
     volumes:
-      - ./channel/crypto-config/peerOrganizations/retailer.productauth.com/peers/peer0.retailer.productauth.com:/etc/hyperledger/fabric
+      - ./channel/crypto-config/peerOrganizations/retailer.certs.com/peers/peer0.retailer.certs.com:/etc/hyperledger/fabric
       - /var/run/:/host/var/run/
     networks:
       - test

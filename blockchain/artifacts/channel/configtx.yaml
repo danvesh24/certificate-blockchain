@@ -2,7 +2,7 @@ Organizations:
     - &OrdererOrg
         Name: OrdererOrg
         ID: OrdererMSP
-        MSPDir: crypto-config/ordererOrganizations/productauth.com/msp
+        MSPDir: crypto-config/ordererOrganizations/certs.com/msp
         Policies:
             Readers:
                 Type: Signature
@@ -17,7 +17,7 @@ Organizations:
     - &Superadmin
         Name: SuperadminMSP
         ID: SuperadminMSP
-        MSPDir: crypto-config/peerOrganizations/superadmin.productauth.com/msp
+        MSPDir: crypto-config/peerOrganizations/superadmin.certs.com/msp
         Policies:
             Readers:
                 Type: Signature
@@ -31,18 +31,15 @@ Organizations:
             Endorsement:
                 Type: Signature
                 Rule: "OR('SuperadminMSP.peer')"
-            # CustomPolicy:
-            #     Type: Signature
-            #     Rule: "OR('Org1MSP.admin', 'Org1MSP.client')"
 
         AnchorPeers:
-            - Host: peer0.superadmin.productauth.com
+            - Host: peer0.superadmin.certs.com
               Port: 7051
 
     - &Company
         Name: CompanyMSP
         ID: CompanyMSP
-        MSPDir: crypto-config/peerOrganizations/company.productauth.com/msp
+        MSPDir: crypto-config/peerOrganizations/company.certs.com/msp
         Policies:
             Readers:
                 Type: Signature
@@ -57,29 +54,9 @@ Organizations:
                 Type: Signature
                 Rule: "OR('CompanyMSP.peer')"
         AnchorPeers:
-            - Host: peer0.company.productauth.com
+            - Host: peer0.company.certs.com
               Port: 9051
 
-    - &Retailer
-        Name: RetailerMSP
-        ID: RetailerMSP
-        MSPDir: crypto-config/peerOrganizations/retailer.productauth.com/msp
-        Policies:
-            Readers:
-                Type: Signature
-                Rule: "OR('RetailerMSP.admin', 'RetailerMSP.peer', 'RetailerMSP.client')"
-            Writers:
-                Type: Signature
-                Rule: "OR('RetailerMSP.admin', 'RetailerMSP.client')"
-            Admins:
-                Type: Signature
-                Rule: "OR('RetailerMSP.admin')"
-            Endorsement:
-                Type: Signature
-                Rule: "OR('RetailerMSP.peer')"
-        AnchorPeers:
-            - Host: peer0.retailer.productauth.com
-              Port: 10051
 
 Capabilities:
     # Channel capabilities apply to both the orderers and the peers and must be
@@ -230,13 +207,13 @@ Orderer: &OrdererDefaults
 
     EtcdRaft:
         Consenters:
-        - Host: orderer.productauth.com
+        - Host: orderer.certs.com
           Port: 7050
-          ClientTLSCert: crypto-config/ordererOrganizations/productauth.com/orderers/orderer.productauth.com/tls/server.crt
-          ServerTLSCert: crypto-config/ordererOrganizations/productauth.com/orderers/orderer.productauth.com/tls/server.crt
+          ClientTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/tls/server.crt
+          ServerTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/tls/server.crt
 
     Addresses:
-        - orderer.productauth.com:7050
+        - orderer.certs.com:7050
 
     BatchTimeout: 2s
 
@@ -276,7 +253,6 @@ Channel: &ChannelDefaults
     Capabilities:
         <<: *ChannelCapabilities
 
-
 Profiles:
     ApplicationChannel:
         <<: *ChannelDefaults
@@ -285,22 +261,22 @@ Profiles:
             OrdererType: etcdraft
             EtcdRaft:
                 Consenters:
-                - Host: orderer.productauth.com
+                - Host: orderer.certs.com
                   Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/productauth.com/orderers/orderer.productauth.com/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/productauth.com/orderers/orderer.productauth.com/tls/server.crt
-                - Host: orderer2.productauth.com
+                  ClientTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/tls/server.crt
+                - Host: orderer2.certs.com
                   Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/productauth.com/orderers/orderer2.productauth.com/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/productauth.com/orderers/orderer2.productauth.com/tls/server.crt
-                - Host: orderer3.productauth.com
+                  ClientTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer2.certs.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer2.certs.com/tls/server.crt
+                - Host: orderer3.certs.com
                   Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/productauth.com/orderers/orderer3.productauth.com/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/productauth.com/orderers/orderer3.productauth.com/tls/server.crt
+                  ClientTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer3.certs.com/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer3.certs.com/tls/server.crt
             Addresses:
-                - orderer.productauth.com:7050
-                - orderer2.productauth.com:7050
-                - orderer3.productauth.com:7050
+                - orderer.certs.com:7050
+                - orderer2.certs.com:7050
+                - orderer3.certs.com:7050
             Organizations:
                 - *OrdererOrg
             Capabilities: *OrdererCapabilities
@@ -309,5 +285,4 @@ Profiles:
             Organizations:
                 - *Superadmin
                 - *Company
-                - *Retailer
             Capabilities: *ApplicationCapabilities

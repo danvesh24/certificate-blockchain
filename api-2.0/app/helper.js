@@ -27,12 +27,12 @@ const getCCP = async (org) => {
 const getCaUrl = async (org, ccp) => {
     let caURL;
     if (org == "Superadmin") {
-        caURL = ccp.certificateAuthorities['ca.superadmin.productauth.com'].url;
+        caURL = ccp.certificateAuthorities['ca.superadmin.certs.com'].url;
 
     } else if (org == "Company") {
-        caURL = ccp.certificateAuthorities['ca.company.productauth.com'].url;
+        caURL = ccp.certificateAuthorities['ca.company.certs.com'].url;
     } else if (org == "Retailer") {
-        caURL = ccp.certificateAuthorities['ca.retailer.productauth.com'].url;
+        caURL = ccp.certificateAuthorities['ca.retailer.certs.com'].url;
     }
     else
         return null
@@ -169,12 +169,12 @@ const isUserRegistered = async (userid, userOrg) => {
 const getCaInfo = async (org, ccp) => {
     let caInfo
     if (org == "Superadmin") {
-        caInfo = ccp.certificateAuthorities['ca.superadmin.productauth.com'];
+        caInfo = ccp.certificateAuthorities['ca.superadmin.certs.com'];
 
     } else if (org == "Company") {
-        caInfo = ccp.certificateAuthorities['ca.company.productauth.com'];
+        caInfo = ccp.certificateAuthorities['ca.company.certs.com'];
     } else if (org == "Retailer") {
-        caInfo = ccp.certificateAuthorities['ca.retailer.productauth.com'];
+        caInfo = ccp.certificateAuthorities['ca.retailer.certs.com'];
     }
     else
         return null

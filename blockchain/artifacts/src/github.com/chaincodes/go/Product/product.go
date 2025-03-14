@@ -21,31 +21,35 @@ type CertificateContract struct{}
 
 // Certificate represents the certificate schema
 type Certificate struct {
-	ID                       primitive.ObjectID      `json:"id"`
-	CertificateName          string                  `json:"contactPerson"`
-	CertificateDescription   string                  `json:"certificateDescription"`
-	CertificateRefNum        int                     `json:"certificateRefNum"`
-    Email                    string                  `json:"email"`  
-    CompanyName              string                  `json:"companyName"` 
-	CertificateStatus        string                  `json:"certificateStatus"`
-	CertificateManufacturer  CertificateManufacturer `json:"certificateManufacturer"`
-	Phone                    int                     `json:"phone"`
-	CertificateValidDate     string                  `json:"certificateValidDate"`
-	Slug                     string                  `json:"slug"`
-	CertificateImages        []string                `json:"certificateImages"`
-	CertificateWebLink       string                  `json:"certificateWebLink"`
-    CreatedAt                string                  `json:"createdAt"`   
-    CertificateIssueDate     string                  `json:"certificateIssueDate"`
-	QrUrl                    string                  `json:"qrUrl"`
-	BlockHash                string                  `json:"blockHash"`
+	ID                      primitive.ObjectID      `json:"id"`
+	CertificateName         string                  `json:"contactPerson"`
+	CertificateDescription  string                  `json:"certificateDescription"`
+	CertificateRefNum       int                     `json:"certificateRefNum"`
+	Email                   string                  `json:"email"`
+	CompanyName             string                  `json:"companyName"`
+	CertificateStatus       string                  `json:"certificateStatus"`
+	CertificateManufacturer CertificateManufacturer `json:"certificateManufacturer"`
+	Phone                   int                     `json:"phone"`
+	CertificateValidDate    string                  `json:"certificateValidDate"`
+	Slug                    string                  `json:"slug"`
+	CertificateImages       []CertificateImages     `json:"certificateImages"`
+	CertificateWebLink      string                  `json:"certificateWebLink"`
+	CreatedAt               string                  `json:"createdAt"`
+	CertificateIssueDate    string                  `json:"certificateIssueDate"`
+	QrUrl                   string                  `json:"qrUrl"`
+	BlockHash               string                  `json:"blockHash"`
 }
-
-
 
 // CertificateManufacturer represents the certificate manufacturer information
 type CertificateManufacturer struct {
 	ID          primitive.ObjectID `json:"_id"`
 	CompanyName string             `json:"companyName"`
+}
+
+type CertificateImages struct {
+	FilePath  string             `json:"filePath"`
+	ImageHash string             `json:"imageHash"`
+	ID        primitive.ObjectID `json:"_id"`
 }
 
 // CertificateQueryResult is used for returning certificate hash details when queried by IDs
@@ -61,21 +65,21 @@ func (cc *CertificateContract) Init(APIstub shim.ChaincodeStubInterface) peer.Re
 
 // CreateCertificate creates a new certificate on the ledger
 func (cc *CertificateContract) CreateCertificate(APIstub shim.ChaincodeStubInterface,
-	id primitive.ObjectID, 
+	id primitive.ObjectID,
 	certificateName string,
 	certificateDescription string,
 	certificateRefNum int,
-    email string,
-    companyName string,
+	email string,
+	companyName string,
 	certificateStatus string,
 	certificateManufacturer CertificateManufacturer,
 	phone int,
 	certificateValidDate string,
 	slug string,
-	certificateImages []string,
+	certificateImages []CertificateImages,
 	certificateWebLink string,
-    createdAt string,
-    certificateIssueDate string,
+	createdAt string,
+	certificateIssueDate string,
 	qrUrl string,
 ) error {
 
@@ -93,23 +97,22 @@ func (cc *CertificateContract) CreateCertificate(APIstub shim.ChaincodeStubInter
 	}
 
 	certificate := Certificate{
-		ID:                       id,
-		CertificateName:          certificateName,
-		CertificateDescription:   certificateDescription,
-		CertificateRefNum:        certificateRefNum,
-        Email:                    email,
-        CompanyName:              companyName,
-		CertificateStatus:        certificateStatus,
-        CertificateManufacturer:  certificateManufacturer,
-        Phone:                    phone,
-		CertificateValidDate:     certificateValidDate,
-		Slug:                     slug,
-		CertificateImages:        certificateImages,
-		CertificateWebLink:       certificateWebLink,
-        CreatedAt:                createdAt,
-        CertificateIssueDate:     certificateIssueDate,
-		QrUrl:                    qrUrl,
-
+		ID:                      id,
+		CertificateName:         certificateName,
+		CertificateDescription:  certificateDescription,
+		CertificateRefNum:       certificateRefNum,
+		Email:                   email,
+		CompanyName:             companyName,
+		CertificateStatus:       certificateStatus,
+		CertificateManufacturer: certificateManufacturer,
+		Phone:                   phone,
+		CertificateValidDate:    certificateValidDate,
+		Slug:                    slug,
+		CertificateImages:       certificateImages,
+		CertificateWebLink:      certificateWebLink,
+		CreatedAt:               createdAt,
+		CertificateIssueDate:    certificateIssueDate,
+		QrUrl:                   qrUrl,
 	}
 
 	hash, err := computeCertificateHash(certificate)
@@ -135,39 +138,39 @@ func (cc *CertificateContract) CreateCertificate(APIstub shim.ChaincodeStubInter
 func computeCertificateHash(certificate Certificate) (string, error) {
 	// Create a temporary struct excluding the BlockHash field
 	certificateWithoutHash := struct {
-        ID                       primitive.ObjectID      `json:"id"`
-        CertificateName          string                  `json:"contactPerson"`
-        CertificateDescription   string                  `json:"certificateDescription"`
-        CertificateRefNum        int                     `json:"certificateRefNum"`
-        Email                    string                  `json:"email"`  
-        CompanyName              string                  `json:"companyName"` 
-        CertificateStatus        string                  `json:"certificateStatus"`
-        CertificateManufacturer  CertificateManufacturer `json:"certificateManufacturer"`
-        Phone                    int                     `json:"phone"`
-        CertificateValidDate     string                  `json:"certificateValidDate"`
-        Slug                     string                  `json:"slug"`
-        CertificateImages        []string                `json:"certificateImages"`
-        CertificateWebLink       string                  `json:"certificateWebLink"`
-        CreatedAt                string                  `json:"createdAt"`   
-        CertificateIssueDate     string                  `json:"certificateIssueDate"`
-        QrUrl                    string                  `json:"qrUrl"`
+		ID                      primitive.ObjectID      `json:"id"`
+		CertificateName         string                  `json:"contactPerson"`
+		CertificateDescription  string                  `json:"certificateDescription"`
+		CertificateRefNum       int                     `json:"certificateRefNum"`
+		Email                   string                  `json:"email"`
+		CompanyName             string                  `json:"companyName"`
+		CertificateStatus       string                  `json:"certificateStatus"`
+		CertificateManufacturer CertificateManufacturer `json:"certificateManufacturer"`
+		Phone                   int                     `json:"phone"`
+		CertificateValidDate    string                  `json:"certificateValidDate"`
+		Slug                    string                  `json:"slug"`
+		CertificateImages       []CertificateImages     `json:"certificateImages"`
+		CertificateWebLink      string                  `json:"certificateWebLink"`
+		CreatedAt               string                  `json:"createdAt"`
+		CertificateIssueDate    string                  `json:"certificateIssueDate"`
+		QrUrl                   string                  `json:"qrUrl"`
 	}{
-		ID:                       certificate.ID,
-		CertificateName:          certificate.CertificateName,
-		CertificateDescription:   certificate.CertificateDescription,
-		CertificateRefNum:        certificate.CertificateRefNum,
-        Email:                    certificate.Email,
-        CompanyName:              certificate.CompanyName,  
-		CertificateStatus:        certificate.CertificateStatus,
-		CertificateManufacturer:  certificate.CertificateManufacturer,
-		Phone:                    certificate.Phone,
-		CertificateValidDate:     certificate.CertificateValidDate,
-		Slug:                     certificate.Slug,
-		CertificateImages:        certificate.CertificateImages,
-		CertificateWebLink:       certificate.CertificateWebLink,
-        CreatedAt:                certificate.CreatedAt,
-        CertificateIssueDate:      certificate.CertificateIssueDate,
-		QrUrl:                    certificate.QrUrl,
+		ID:                      certificate.ID,
+		CertificateName:         certificate.CertificateName,
+		CertificateDescription:  certificate.CertificateDescription,
+		CertificateRefNum:       certificate.CertificateRefNum,
+		Email:                   certificate.Email,
+		CompanyName:             certificate.CompanyName,
+		CertificateStatus:       certificate.CertificateStatus,
+		CertificateManufacturer: certificate.CertificateManufacturer,
+		Phone:                   certificate.Phone,
+		CertificateValidDate:    certificate.CertificateValidDate,
+		Slug:                    certificate.Slug,
+		CertificateImages:       certificate.CertificateImages,
+		CertificateWebLink:      certificate.CertificateWebLink,
+		CreatedAt:               certificate.CreatedAt,
+		CertificateIssueDate:    certificate.CertificateIssueDate,
+		QrUrl:                   certificate.QrUrl,
 	}
 
 	var buf bytes.Buffer
@@ -240,17 +243,17 @@ func (cc *CertificateContract) EditCertificate(APIstub shim.ChaincodeStubInterfa
 	certificateName string,
 	certificateDescription string,
 	certificateRefNum int,
-    email string,
-    companyName string,
+	email string,
+	companyName string,
 	certificateStatus string,
 	certificateManufacturer CertificateManufacturer,
 	phone int,
 	certificateValidDate string,
 	slug string,
-	certificateImages []string,
+	certificateImages []CertificateImages,
 	certificateWebLink string,
-    createdAt string,
-    certificateIssueDate string,
+	createdAt string,
+	certificateIssueDate string,
 	qrUrl string,
 ) error {
 
@@ -259,21 +262,21 @@ func (cc *CertificateContract) EditCertificate(APIstub shim.ChaincodeStubInterfa
 		return fmt.Errorf("failed to retrieve certificate: %v", err)
 	}
 
-	    certificate.CertificateName = certificateName
-		certificate.CertificateDescription = certificateDescription
-		certificate.CertificateRefNum = certificateRefNum
-        certificate.Email = email
-        certificate.CompanyName  = companyName  
-		certificate.CertificateStatus = certificateStatus
-		certificate.CertificateManufacturer = certificateManufacturer
-		certificate.Phone = phone
-		certificate.CertificateValidDate = certificateValidDate
-		certificate.Slug =slug
-		certificate.CertificateImages = certificateImages
-		certificate.CertificateWebLink = certificateWebLink
-        certificate.CreatedAt = createdAt
-        certificate.CertificateIssueDate = certificateIssueDate 
-		certificate.QrUrl = qrUrl
+	certificate.CertificateName = certificateName
+	certificate.CertificateDescription = certificateDescription
+	certificate.CertificateRefNum = certificateRefNum
+	certificate.Email = email
+	certificate.CompanyName = companyName
+	certificate.CertificateStatus = certificateStatus
+	certificate.CertificateManufacturer = certificateManufacturer
+	certificate.Phone = phone
+	certificate.CertificateValidDate = certificateValidDate
+	certificate.Slug = slug
+	certificate.CertificateImages = certificateImages
+	certificate.CertificateWebLink = certificateWebLink
+	certificate.CreatedAt = createdAt
+	certificate.CertificateIssueDate = certificateIssueDate
+	certificate.QrUrl = qrUrl
 
 	newHash, err := computeCertificateHash(*certificate)
 	if err != nil {
@@ -414,6 +417,7 @@ func (cc *CertificateContract) QueryCertificatesByIDs(APIstub shim.ChaincodeStub
 	// Return the list of BatchQueryResults
 	return results, nil
 }
+
 // Invoke routes function calls to the appropriate handler
 func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Response {
 	function, args := APIstub.GetFunctionAndParameters()
@@ -437,14 +441,13 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		}
 
 		// Parse phone
-        phone, err := strconv.Atoi(args[8])
+		phone, err := strconv.Atoi(args[8])
 		if err != nil {
 			return shim.Error(fmt.Sprintf("Invalid phone: %cc", args[8]))
 		}
-		
 
 		// Parse certificateImages
-		var certificateImages []string
+		var certificateImages []CertificateImages
 		err = json.Unmarshal([]byte(args[11]), &certificateImages)
 		if err != nil {
 			return shim.Error(fmt.Sprintf("Invalid certificateImages JSON: %cc", args[11]))
@@ -471,10 +474,10 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 			args[9],
 			args[10],
 			certificateImages,
-            args[12],
-            args[13],
-            args[14],
-            args[15],
+			args[12],
+			args[13],
+			args[14],
+			args[15],
 		)
 		if err != nil {
 			return shim.Error(fmt.Sprintf("Failed to create certificate: %cc", err.Error()))
@@ -515,13 +518,13 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		}
 
 		// Parse phone
-        phone, err := strconv.Atoi(args[8])
+		phone, err := strconv.Atoi(args[8])
 		if err != nil {
 			return shim.Error(fmt.Sprintf("Invalid phone: %cc", args[8]))
 		}
 
 		// Parse certificateImages
-		var certificateImages []string
+		var certificateImages []CertificateImages
 		err = json.Unmarshal([]byte(args[11]), &certificateImages)
 		if err != nil {
 			return shim.Error(fmt.Sprintf("Invalid certificateImages JSON: %cc", args[11]))
@@ -548,10 +551,10 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 			args[9],
 			args[10],
 			certificateImages,
-            args[12],
-            args[13],
-            args[14],
-            args[15],
+			args[12],
+			args[13],
+			args[14],
+			args[15],
 		)
 		if err != nil {
 			return shim.Error(fmt.Sprintf("Failed to edit certificate: %cc", err.Error()))
@@ -573,7 +576,7 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 			return shim.Error(fmt.Sprintf("Failed to marshal response: %v", err))
 		}
 		return shim.Success(responseJSON)
-	
+
 	case "QueryCertificatesByIDs":
 		if len(args) < 1 {
 			return shim.Error("Incorrect number of arguments. Expecting at least 1")

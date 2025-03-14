@@ -44,11 +44,6 @@ joinChannel(){
     
     setGlobals 2
     peer channel join -b ../channel-artifacts/${CHANNEL_NAME}.block
-   
-    sleep 3
-
-    setGlobals 3
-    peer channel join -b ../channel-artifacts/${CHANNEL_NAME}.block
     
 }
 

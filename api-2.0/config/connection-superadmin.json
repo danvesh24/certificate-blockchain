@@ -15,33 +15,33 @@
         "Superadmin": {
             "mspid": "SuperadminMSP",
             "peers": [
-                "peer0.superadmin.productauth.com"
+                "peer0.superadmin.certs.com"
             ],
             "certificateAuthorities": [
-                "ca.superadmin.productauth.com"
+                "ca.superadmin.certs.com"
             ]
         }
     },
     "peers": {
-        "peer0.superadmin.productauth.com": {
+        "peer0.superadmin.certs.com": {
             "url": "grpcs://localhost:7051",
             "tlsCACerts": {
-                "pem": "-----BEGIN CERTIFICATE-----\nMIICFjCCAb2gAwIBAgIUGdJssN8mX4NB16joEZeTsG3q5QAwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTI1MDMwOTEwMDkwMFoXDTQwMDMwNTEwMDkwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEELnRqfOb8w2aN/gTdhTebm5E\nGvHjFZhBtLdP0HmH4x0iUP9D6dCu0VpwjJsqxH8xd4lWH6kkIHiTyarpyKKnKqNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFK6KcWvIgiundsaAyGAeGarIcgMlMAoGCCqGSM49BAMCA0cAMEQCIAkBBe0l+2O0\nI8QkGVB1Vwc15CtQxOM8g1Nly3U0pe4TAiA2CdCvtR+TV2+kOZ0MqpHD6p8jAdSl\n8qKX0IL4ogAczg==\n-----END CERTIFICATE-----\n"
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFjCCAb2gAwIBAgIUWF8DC1vPlQa8GKwVSdXN2wCtkHAwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTI1MDMxNDEwMDUwMFoXDTQwMDMxMDEwMDUwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEgOpigpPWGU90q0t04ziOPfhx\nWE7O2qwFlDV7peVTK2mETcDoRGB54Hr+ovYz3BOwuxr/1NGujNI9AGslIAJGGqNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFBOaI8WilxWsNKFmNzLOeFuXOe3kMAoGCCqGSM49BAMCA0cAMEQCIGQW2U+Jne2v\nWlFTVG3VcsIlpdbxd+7jZ85/zplRFxvYAiBZk17jtya/lPsu9hBctALxpK3Y97lH\nI6vEWhqdgES/ug==\n-----END CERTIFICATE-----\n"
             },
             "grpcOptions": {
-                "ssl-target-name-override": "peer0.superadmin.productauth.com",
-                "hostnameOverride": "peer0.superadmin.productauth.com"
+                "ssl-target-name-override": "peer0.superadmin.certs.com",
+                "hostnameOverride": "peer0.superadmin.certs.com"
             }
         }
 
 	
     },
     "certificateAuthorities": {
-        "ca.superadmin.productauth.com": {
+        "ca.superadmin.certs.com": {
             "url": "https://localhost:7054",
-            "caName": "ca.superadmin.productauth.com",
+            "caName": "ca.superadmin.certs.com",
             "tlsCACerts": {
-                "pem": "-----BEGIN CERTIFICATE-----\nMIICFjCCAb2gAwIBAgIUGdJssN8mX4NB16joEZeTsG3q5QAwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTI1MDMwOTEwMDkwMFoXDTQwMDMwNTEwMDkwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEELnRqfOb8w2aN/gTdhTebm5E\nGvHjFZhBtLdP0HmH4x0iUP9D6dCu0VpwjJsqxH8xd4lWH6kkIHiTyarpyKKnKqNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFK6KcWvIgiundsaAyGAeGarIcgMlMAoGCCqGSM49BAMCA0cAMEQCIAkBBe0l+2O0\nI8QkGVB1Vwc15CtQxOM8g1Nly3U0pe4TAiA2CdCvtR+TV2+kOZ0MqpHD6p8jAdSl\n8qKX0IL4ogAczg==\n-----END CERTIFICATE-----\n"
+                "pem": "-----BEGIN CERTIFICATE-----\nMIICFjCCAb2gAwIBAgIUWF8DC1vPlQa8GKwVSdXN2wCtkHAwCgYIKoZIzj0EAwIw\naDELMAkGA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQK\nEwtIeXBlcmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMt\nY2Etc2VydmVyMB4XDTI1MDMxNDEwMDUwMFoXDTQwMDMxMDEwMDUwMFowaDELMAkG\nA1UEBhMCVVMxFzAVBgNVBAgTDk5vcnRoIENhcm9saW5hMRQwEgYDVQQKEwtIeXBl\ncmxlZGdlcjEPMA0GA1UECxMGRmFicmljMRkwFwYDVQQDExBmYWJyaWMtY2Etc2Vy\ndmVyMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEgOpigpPWGU90q0t04ziOPfhx\nWE7O2qwFlDV7peVTK2mETcDoRGB54Hr+ovYz3BOwuxr/1NGujNI9AGslIAJGGqNF\nMEMwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwHQYDVR0OBBYE\nFBOaI8WilxWsNKFmNzLOeFuXOe3kMAoGCCqGSM49BAMCA0cAMEQCIGQW2U+Jne2v\nWlFTVG3VcsIlpdbxd+7jZ85/zplRFxvYAiBZk17jtya/lPsu9hBctALxpK3Y97lH\nI6vEWhqdgES/ug==\n-----END CERTIFICATE-----\n"
             },
             "httpOptions": {
                 "verify": false
