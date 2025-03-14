@@ -32,7 +32,7 @@ type Certificate struct {
 	Phone                    int                     `json:"phone"`
 	CertificateValidDate     string                  `json:"certificateValidDate"`
 	Slug                     string                  `json:"slug"`
-	CertificateImages        []string                `json:"certificateImages"`
+	CertificateImages        []CertificateImages        `json:"certificateImages"`
 	CertificateWebLink       string                  `json:"certificateWebLink"`
     CreatedAt                string                  `json:"createdAt"`   
     CertificateIssueDate     string                  `json:"certificateIssueDate"`
@@ -47,6 +47,13 @@ type CertificateManufacturer struct {
 	ID          primitive.ObjectID `json:"_id"`
 	CompanyName string             `json:"companyName"`
 }
+
+type CertificateImages struct {
+	FilePath  string              `json:"filePath"`
+	ImageHash string 			 `json:"imageHash"`
+	ID        primitive.ObjectID `json:"_id"`
+}
+
 
 // CertificateQueryResult is used for returning certificate hash details when queried by IDs
 type CertificateQueryResult struct {
@@ -72,7 +79,7 @@ func (cc *CertificateContract) CreateCertificate(APIstub shim.ChaincodeStubInter
 	phone int,
 	certificateValidDate string,
 	slug string,
-	certificateImages []string,
+	certificateImages []CertificateImages,
 	certificateWebLink string,
     createdAt string,
     certificateIssueDate string,
@@ -146,7 +153,7 @@ func computeCertificateHash(certificate Certificate) (string, error) {
         Phone                    int                     `json:"phone"`
         CertificateValidDate     string                  `json:"certificateValidDate"`
         Slug                     string                  `json:"slug"`
-        CertificateImages        []string                `json:"certificateImages"`
+        CertificateImages        []CertificateImages     `json:"certificateImages"`
         CertificateWebLink       string                  `json:"certificateWebLink"`
         CreatedAt                string                  `json:"createdAt"`   
         CertificateIssueDate     string                  `json:"certificateIssueDate"`
@@ -247,7 +254,7 @@ func (cc *CertificateContract) EditCertificate(APIstub shim.ChaincodeStubInterfa
 	phone int,
 	certificateValidDate string,
 	slug string,
-	certificateImages []string,
+	certificateImages []CertificateImages,
 	certificateWebLink string,
     createdAt string,
     certificateIssueDate string,
@@ -444,7 +451,7 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		
 
 		// Parse certificateImages
-		var certificateImages []string
+		var certificateImages []CertificateImages
 		err = json.Unmarshal([]byte(args[11]), &certificateImages)
 		if err != nil {
 			return shim.Error(fmt.Sprintf("Invalid certificateImages JSON: %cc", args[11]))
@@ -521,7 +528,7 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		}
 
 		// Parse certificateImages
-		var certificateImages []string
+		var certificateImages []CertificateImages
 		err = json.Unmarshal([]byte(args[11]), &certificateImages)
 		if err != nil {
 			return shim.Error(fmt.Sprintf("Invalid certificateImages JSON: %cc", args[11]))
