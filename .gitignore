@@ -1,0 +1,4 @@
+./blockchain/artifacts/channel/create-certificate-with-ca/fabric-ca
+./blockchain/artifacts/channel/crypto-config
+./api-2.0/node_modules
+

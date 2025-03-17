@@ -1,0 +1,51 @@
+{
+    "name": "first-network-${low_org}",
+    "version": "1.0.0",
+    "client": {
+        "organization": "${ORG}",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                }
+            }
+        }
+    },
+    "organizations": {
+        "${ORG}": {
+            "mspid": "${ORG}MSP",
+            "peers": [
+                "peer0.${low_org}.certs.com"
+            ],
+            "certificateAuthorities": [
+                "ca.${low_org}.certs.com"
+            ]
+        }
+    },
+    "peers": {
+        "peer0.${low_org}.certs.com": {
+            "url": "grpcs://localhost:${P0PORT}",
+            "tlsCACerts": {
+                "pem": "${PEERPEM}"
+            },
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.${low_org}.certs.com",
+                "hostnameOverride": "peer0.${low_org}.certs.com"
+            }
+        }
+
+	
+    },
+    "certificateAuthorities": {
+        "ca.${low_org}.certs.com": {
+            "url": "https://localhost:${CAPORT}",
+            "caName": "ca.${low_org}.certs.com",
+            "tlsCACerts": {
+                "pem": "${CAPEM}"
+            },
+            "httpOptions": {
+                "verify": false
+            }
+        }
+    }
+}
