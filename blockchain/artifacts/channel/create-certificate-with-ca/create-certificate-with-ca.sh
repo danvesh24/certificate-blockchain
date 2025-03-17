@@ -202,7 +202,6 @@ createCertificatesForcompany() {
 
 # createCertificateForcompany
 
-
 createCretificatesForOrderer() {
   echo
   echo "Enroll the CA admin"
@@ -384,7 +383,5 @@ createConnectionProfile() {
 removeOldCredentials
 createcertificatesForsuperadmin
 createCertificatesForcompany
-
 createCretificatesForOrderer
-
 createConnectionProfile
