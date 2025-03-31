@@ -18,29 +18,30 @@ var logger = flogging.MustGetLogger("CertificateContractLogger")
 type HealthCardContract struct{}
 
 type HealthCard struct {
-	ID                     primitive.ObjectID `json:"id"`
-	Name                   string             `json:"name"`
-	Email                  string             `json:"email"`
-	Address                Address            `json:"address"`
-	PhoneNumber            string             `json:"phoneNumber"`
-	IDCode                 string             `json:"idCode"`
-	DateOfBirth            string             `json:"dob"`
-	Gender                 string             `json:"gender"`
-	BloodGroup             string             `json:"bloodGroup"`
-	Allergy                string             `json:"allergy"`
-	LastBloodPressure      string             `json:"lastBloodPressure"`
-	BloodSugar             string             `json:"bloodSugar"`
-	PastSurgery            string             `json:"pastSurgery"`
-	LastHospitalization    string             `json:"lastHospitalization"`
-	DiseaseCondition       string             `json:"diseaseCondition"`
-	RegularMedication      string             `json:"regularMedication"`
-	HealthMessage          string             `json:"healthMessage"`
-	EmergencyContactNumber string             `json:"emergencyContactNumber"`
-	HealthCardImages       []HealthCardImages `json:"healthCardImages"`
-	Slug                   string             `json:"slug"`
-	QrUrl                  string             `json:"qrUrl"`
-	CreatedAt              string             `json:"createdAt"`
-	BlockHash              string             `json:"blockHash"`
+	ID                     primitive.ObjectID     `json:"id"`
+	Name                   string                 `json:"name"`
+	Email                  string                 `json:"email"`
+	Address                Address                `json:"address"`
+	PhoneNumber            string                 `json:"phoneNumber"`
+	IDCode                 string                 `json:"idCode"`
+	DateOfBirth            string                 `json:"dob"`
+	Gender                 string                 `json:"gender"`
+	BloodGroup             string                 `json:"bloodGroup"`
+	Allergy                string                 `json:"allergy"`
+	LastBloodPressure      string                 `json:"lastBloodPressure"`
+	BloodSugar             string                 `json:"bloodSugar"`
+	PastSurgery            string                 `json:"pastSurgery"`
+	LastHospitalization    string                 `json:"lastHospitalization"`
+	DiseaseCondition       string                 `json:"diseaseCondition"`
+	RegularMedication      string                 `json:"regularMedication"`
+	HealthMessage          string                 `json:"healthMessage"`
+	EmergencyContactNumber string                 `json:"emergencyContactNumber"`
+	HealthCardImages       []HealthCardImages     `json:"healthCardImages"`
+	Slug                   string                 `json:"slug"`
+	QrUrl                  string                 `json:"qrUrl"`
+	CreatedAt              string                 `json:"createdAt"`
+	HealthCardManufacturer HealthCardManufacturer `json:"healthCardManufacturer"`
+	BlockHash              string                 `json:"blockHash"`
 }
 
 type Address struct {
@@ -58,6 +59,11 @@ type HealthCardImages struct {
 type HealthCardQueryResult struct {
 	ID        string `json:"id"`
 	BlockHash string `json:"blockHash"`
+}
+
+type HealthCardManufacturer struct {
+	ID          primitive.ObjectID `json:"_id"`
+	CompanyName string             `json:"companyName"`
 }
 
 // Init initializes the chaincode
@@ -90,6 +96,7 @@ func (h *HealthCardContract) CreateHealthCard(
 	slug string,
 	qrUrl string,
 	createdAt string,
+	healthCardManufacturer HealthCardManufacturer,
 ) error {
 
 	// Check if health card already exists using the health card's ID as key
@@ -124,6 +131,7 @@ func (h *HealthCardContract) CreateHealthCard(
 		Slug:                   slug,
 		QrUrl:                  qrUrl,
 		CreatedAt:              createdAt,
+		HealthCardManufacturer: healthCardManufacturer,
 	}
 
 	hash, err := computeHealthCardHash(healthCard)
@@ -149,28 +157,29 @@ func (h *HealthCardContract) CreateHealthCard(
 func computeHealthCardHash(healthCard HealthCard) (string, error) {
 	// Create a temporary struct excluding the BlockHash field
 	healthCardWithoutHash := struct {
-		ID                     primitive.ObjectID `json:"id"`
-		Name                   string             `json:"name"`
-		Email                  string             `json:"email"`
-		Address                Address            `json:"address"`
-		PhoneNumber            string             `json:"phoneNumber"`
-		IDCode                 string             `json:"idCode"`
-		DateOfBirth            string             `json:"dob"`
-		Gender                 string             `json:"gender"`
-		BloodGroup             string             `json:"bloodGroup"`
-		Allergy                string             `json:"allergy"`
-		LastBloodPressure      string             `json:"lastBloodPressure"`
-		BloodSugar             string             `json:"bloodSugar"`
-		PastSurgery            string             `json:"pastSurgery"`
-		LastHospitalization    string             `json:"lastHospitalization"`
-		DiseaseCondition       string             `json:"diseaseCondition"`
-		RegularMedication      string             `json:"regularMedication"`
-		HealthMessage          string             `json:"healthMessage"`
-		EmergencyContactNumber string             `json:"emergencyContactNumber"`
-		HealthCardImages       []HealthCardImages `json:"healthCardImages"`
-		Slug                   string             `json:"slug"`
-		QrUrl                  string             `json:"qrUrl"`
-		CreatedAt              string             `json:"createdAt"`
+		ID                     primitive.ObjectID     `json:"id"`
+		Name                   string                 `json:"name"`
+		Email                  string                 `json:"email"`
+		Address                Address                `json:"address"`
+		PhoneNumber            string                 `json:"phoneNumber"`
+		IDCode                 string                 `json:"idCode"`
+		DateOfBirth            string                 `json:"dob"`
+		Gender                 string                 `json:"gender"`
+		BloodGroup             string                 `json:"bloodGroup"`
+		Allergy                string                 `json:"allergy"`
+		LastBloodPressure      string                 `json:"lastBloodPressure"`
+		BloodSugar             string                 `json:"bloodSugar"`
+		PastSurgery            string                 `json:"pastSurgery"`
+		LastHospitalization    string                 `json:"lastHospitalization"`
+		DiseaseCondition       string                 `json:"diseaseCondition"`
+		RegularMedication      string                 `json:"regularMedication"`
+		HealthMessage          string                 `json:"healthMessage"`
+		EmergencyContactNumber string                 `json:"emergencyContactNumber"`
+		HealthCardImages       []HealthCardImages     `json:"healthCardImages"`
+		Slug                   string                 `json:"slug"`
+		QrUrl                  string                 `json:"qrUrl"`
+		CreatedAt              string                 `json:"createdAt"`
+		HealthCardManufacturer HealthCardManufacturer `json:"healthCardManufacturer"`
 	}{
 		ID:                     healthCard.ID,
 		Name:                   healthCard.Name,
@@ -194,6 +203,7 @@ func computeHealthCardHash(healthCard HealthCard) (string, error) {
 		Slug:                   healthCard.Slug,
 		QrUrl:                  healthCard.QrUrl,
 		CreatedAt:              healthCard.CreatedAt,
+		HealthCardManufacturer: healthCard.HealthCardManufacturer,
 	}
 
 	var buf bytes.Buffer
@@ -346,8 +356,8 @@ func (h *HealthCardContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Re
 	switch function {
 
 	case "CreateHealthCard":
-		if len(args) != 22 {
-			return shim.Error("Incorrect number of arguments. Expecting 22")
+		if len(args) != 23 {
+			return shim.Error("Incorrect number of arguments. Expecting 23")
 		}
 
 		// Parse ID
@@ -371,6 +381,12 @@ func (h *HealthCardContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Re
 		err = json.Unmarshal([]byte(args[18]), &healthCardImages)
 		if err != nil {
 			return shim.Error(fmt.Sprintf("Invalid healthCardImages JSON: %s", args[18]))
+		}
+
+		var healthcardManufacturer HealthCardManufacturer
+		err = json.Unmarshal([]byte(args[22]), &healthcardManufacturer)
+		if err != nil {
+			return shim.Error(fmt.Sprintf("Invalid certificateManufacturer JSON: %cc", args[22]))
 		}
 
 		err = h.CreateHealthCard(
@@ -397,6 +413,7 @@ func (h *HealthCardContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Re
 			args[19],
 			args[20],
 			args[21],
+			healthcardManufacturer,
 		)
 		if err != nil {
 			return shim.Error(fmt.Sprintf("Failed to create health card: %s", err.Error()))
