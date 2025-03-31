@@ -7,9 +7,9 @@ volumes:
   walletstore:
 
 networks:
-  test:
+  network1:
     external:
-      name: artifacts_test
+      name: artifacts_network1
 
 
 services:
@@ -23,14 +23,14 @@ services:
       - DATABASE_USERNAME=hppoc
       - DATABASE_PASSWORD=password
     healthcheck:
-      test: "pg_isready -h localhost -p 5432 -q -U postgres"
+      network1: "pg_isready -h localhost -p 5432 -q -U postgres"
       interval: 30s
       timeout: 10s
       retries: 5
     # volumes:
     #   - pgdata:/var/lib/postgresql/data
     networks:
-      - test
+      - network1
 
   explorer.mynetwork.com:
     image: ghcr.io/hyperledger-labs/explorer:2.0.0
@@ -57,4 +57,4 @@ services:
       explorerdb.mynetwork.com:
         condition: service_healthy
     networks:
-      - test
+      - network1

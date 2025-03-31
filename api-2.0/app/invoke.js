@@ -132,6 +132,19 @@ const invokeTransaction = async (channelName, chaincodeName, fcn, args, userid, 
             console.log('Stringified Result:', JSON.stringify(result));
             message = `Product Hashes`;
         }
+
+        //Health Card
+        else if (fcn === "CreateHealthCard") {
+            result = await contract.submitTransaction(fcn, ...args);
+            console.log('Stringified Result:', JSON.stringify(result));
+            message = `Successfully added the Health Card with ID ${args[0]} and Name ${args[1]}`;
+        }
+        else if (fcn === "EditHealthCard") {
+            result = await contract.submitTransaction(fcn, ...args);
+            console.log('Stringified Result:', JSON.stringify(result));
+            message = `Successfully edited the Health Card with ID ${args[0]}`;
+        }
+
          else {
             return `Invocation require either CreateCustomer, EditCustomer, GetCustomerWithHash, CreateCompany, ChangeCompanyStatus, GetCompanyWithHash, CreateBatch, EditBatch, GetBatchWithHash, CreateProductItem, EditProductItem or GetProductWithHash as function but got ${fcn}`
         }

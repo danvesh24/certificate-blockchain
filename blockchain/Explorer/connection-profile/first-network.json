@@ -1,5 +1,5 @@
 {
-	"name": "test-network",
+	"name": "network1-network",
 	"version": "1.0.0",
 	"client": {
 		"tlsEnable": true,
@@ -44,7 +44,7 @@
 			"tlsCACerts": {
 				"path": "/etc/data/peerOrganizations/superadmin.productauth.com/peers/peer0.superadmin.productauth.com/tls/ca.crt"
 			},
-			"url": "grpcs://peer0.superadmin.productauth.com:7051"
+			"url": "grpcs://peer0.superadmin.productauth.com:13051"
 		}
 	}
 }

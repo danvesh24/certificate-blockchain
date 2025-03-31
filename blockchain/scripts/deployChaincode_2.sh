@@ -36,6 +36,13 @@ presetup() {
     GO111MODULE=on go mod vendor
     popd
 
+    # HealthCard Chaincode
+    pushd ../artifacts/src/github.com/chaincodes/go/HealthCard/
+    go mod init github.com/chaincodes/go/HealthCard
+    go mod tidy 
+    GO111MODULE=on go mod vendor
+    popd
+
     echo "Finished vendoring Go dependencies for Product, Company, and Customer chaincodes"
 }
 
@@ -68,6 +75,13 @@ CC_RUNTIME_LANGUAGE_5="golang"
 VERSION_5="1"
 SEQUENCE_5=1
 
+CC_NAME_6="HealthCard"
+CC_SRC_PATH_6="../artifacts/src/github.com/chaincodes/go/HealthCard/"
+CC_POLICY_6="OR('SuperadminMSP.peer','CompanyMSP.peer')"
+CC_RUNTIME_LANGUAGE_6="golang"
+VERSION_6="1"
+SEQUENCE_6=1
+
 CHANNEL_NAME="mychannel"
 
 # Package Chaincodes
@@ -94,6 +108,12 @@ packageChaincode() {
     peer lifecycle chaincode package ${CC_NAME_5}.tar.gz \
         --path ${CC_SRC_PATH_5} --lang ${CC_RUNTIME_LANGUAGE_5} \
         --label ${CC_NAME_5}_${VERSION_5}
+
+    # For HealthCard Chaincode
+    rm -rf ${CC_NAME_6}.tar.gz
+    peer lifecycle chaincode package ${CC_NAME_6}.tar.gz \
+        --path ${CC_SRC_PATH_6} --lang ${CC_RUNTIME_LANGUAGE_6} \
+        --label ${CC_NAME_6}_${VERSION_6}
 
     if [ $? -ne 0 ]; then
         echo "Error packaging chaincodes"
@@ -173,6 +193,25 @@ installChaincode() {
         echo "Error installing Batch chaincode on Org2"
         exit 1
     fi
+
+    # For Org1, HealthCard Chaincode
+    setGlobals 1
+    peer lifecycle chaincode install ${CC_NAME_6}.tar.gz
+    if [ $? -ne 0 ]; then
+        echo "Error installing HealthCard chaincode"
+        exit 1
+    fi
+    echo "===================== HealthCard chaincode installed ===================== "
+
+    # For Org2, HealthCard Chaincode
+    setGlobals 2
+    peer lifecycle chaincode install ${CC_NAME_6}.tar.gz
+    if [ $? -ne 0 ]; then
+        echo "Error installing HealthCard chaincode on Org2"
+        exit 1
+    fi
+    echo "===================== HealthCard chaincode installed on peer0.company ===================== "
+
 }
 
 # Query Installed Chaincodes
@@ -184,6 +223,7 @@ queryInstalled() {
     PACKAGE_ID_3=$(sed -n "/${CC_NAME_3}_${VERSION_3}/{s/^Package ID: //; s/, Label:.*$//; p;}" log.txt)
     PACKAGE_ID_4=$(sed -n "/${CC_NAME_4}_${VERSION_4}/{s/^Package ID: //; s/, Label:.*$//; p;}" log.txt)
     PACKAGE_ID_5=$(sed -n "/${CC_NAME_5}_${VERSION_5}/{s/^Package ID: //; s/, Label:.*$//; p;}" log.txt)
+    PACKAGE_ID_6=$(sed -n "/${CC_NAME_6}_${VERSION_6}/{s/^Package ID: //; s/, Label:.*$//; p;}" log.txt)
     echo "===================== Query installed successful ===================== "
 }
 
@@ -191,7 +231,7 @@ queryInstalled() {
 approveForMyOrg1() {
     # Approve ProductItem Chaincode for Org1
     setGlobals 1
-    peer lifecycle chaincode approveformyorg -o localhost:7050 \
+    peer lifecycle chaincode approveformyorg -o localhost:13050 \
         --ordererTLSHostnameOverride orderer.certs.com --tls \
         --signature-policy ${CC_POLICY_2} \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME_2} --version ${VERSION_2} \
@@ -200,7 +240,7 @@ approveForMyOrg1() {
         
 
     # Approve Company Chaincode for Org1
-    peer lifecycle chaincode approveformyorg -o localhost:7050 \
+    peer lifecycle chaincode approveformyorg -o localhost:13050 \
         --ordererTLSHostnameOverride orderer.certs.com --tls \
         --signature-policy ${CC_POLICY_3} \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME_3} --version ${VERSION_3} \
@@ -208,19 +248,27 @@ approveForMyOrg1() {
         --sequence ${SEQUENCE_3}
 
     # Approve Customer Chaincode for Org1
-    peer lifecycle chaincode approveformyorg -o localhost:7050 \
+    peer lifecycle chaincode approveformyorg -o localhost:13050 \
         --ordererTLSHostnameOverride orderer.certs.com --tls \
         --signature-policy ${CC_POLICY_4} \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME_4} --version ${VERSION_4} \
         --package-id ${PACKAGE_ID_4} \
         --sequence ${SEQUENCE_4}
 
-    peer lifecycle chaincode approveformyorg -o localhost:7050 \
+    peer lifecycle chaincode approveformyorg -o localhost:13050 \
         --ordererTLSHostnameOverride orderer.certs.com --tls \
         --signature-policy ${CC_POLICY_5} \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME_5} --version ${VERSION_5} \
         --package-id ${PACKAGE_ID_5} \
         --sequence ${SEQUENCE_5}
+
+    # Approve HealthCard Chaincode for Org1
+    peer lifecycle chaincode approveformyorg -o localhost:13050 \
+        --ordererTLSHostnameOverride orderer.certs.com --tls \
+        --signature-policy ${CC_POLICY_6} \
+        --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME_6} --version ${VERSION_6} \
+        --package-id ${PACKAGE_ID_6} \
+        --sequence ${SEQUENCE_6}
 
     if [ $? -ne 0 ]; then
         echo "Error approving chaincodes for Org1"
@@ -233,26 +281,32 @@ checkCommitReadyness() {
     setGlobals 1
 
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
+        --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
         --signature-policy ${CC_POLICY_2} \
         --name ${CC_NAME_2} --version ${VERSION_2} --sequence ${SEQUENCE_2} --output json 
     echo "===================== checking commit readyness from Productitem ===================== "
 
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
+        --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
         --signature-policy ${CC_POLICY_3} \
         --name ${CC_NAME_3} --version ${VERSION_3} --sequence ${SEQUENCE_3} --output json 
     echo "===================== checking commit readyness from Company ===================== "
 
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
+        --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
         --signature-policy ${CC_POLICY_4} \
         --name ${CC_NAME_4} --version ${VERSION_4} --sequence ${SEQUENCE_4} --output json 
 
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
+        --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
         --signature-policy ${CC_POLICY_5} \
         --name ${CC_NAME_5} --version ${VERSION_5} --sequence ${SEQUENCE_5} --output json
+
+    peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
+        --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
+        --signature-policy ${CC_POLICY_6} \
+        --name ${CC_NAME_6} --version ${VERSION_6} --sequence ${SEQUENCE_6} --output json
+    echo "===================== checking commit readyness from HealthCard ===================== "
 
     echo "===================== checking commit readyness from Customer ===================== "
 
@@ -263,7 +317,7 @@ approveForMyOrg2() {
     setGlobals 2
 
     # Approve ProductItem Chaincode for Org2
-    peer lifecycle chaincode approveformyorg -o localhost:7050 \
+    peer lifecycle chaincode approveformyorg -o localhost:13050 \
         --ordererTLSHostnameOverride orderer.certs.com --tls \
         --signature-policy ${CC_POLICY_2} \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME_2} \
@@ -271,7 +325,7 @@ approveForMyOrg2() {
         --sequence ${SEQUENCE_2}
 
     # Approve Company Chaincode for Org2
-    peer lifecycle chaincode approveformyorg -o localhost:7050 \
+    peer lifecycle chaincode approveformyorg -o localhost:13050 \
         --ordererTLSHostnameOverride orderer.certs.com --tls \
         --signature-policy ${CC_POLICY_3} \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME_3} \
@@ -279,19 +333,27 @@ approveForMyOrg2() {
         --sequence ${SEQUENCE_3}
 
     # Approve Customer Chaincode for Org2
-    peer lifecycle chaincode approveformyorg -o localhost:7050 \
+    peer lifecycle chaincode approveformyorg -o localhost:13050 \
         --ordererTLSHostnameOverride orderer.certs.com --tls \
         --signature-policy ${CC_POLICY_4} \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME_4} \
         --version ${VERSION_4} --package-id ${PACKAGE_ID_4} \
         --sequence ${SEQUENCE_4}
 
-    peer lifecycle chaincode approveformyorg -o localhost:7050 \
+    peer lifecycle chaincode approveformyorg -o localhost:13050 \
         --ordererTLSHostnameOverride orderer.certs.com --tls \
         --signature-policy ${CC_POLICY_5} \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME_5} \
         --version ${VERSION_5} --package-id ${PACKAGE_ID_5} \
         --sequence ${SEQUENCE_5}
+
+    # Approve HealthCard Chaincode for Org2
+    peer lifecycle chaincode approveformyorg -o localhost:13050 \
+        --ordererTLSHostnameOverride orderer.certs.com --tls \
+        --signature-policy ${CC_POLICY_6} \
+        --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME_6} \
+        --version ${VERSION_6} --package-id ${PACKAGE_ID_6} \
+        --sequence ${SEQUENCE_6}
 
     if [ $? -ne 0 ]; then
         echo "Error approving chaincodes for Org2"
@@ -304,27 +366,33 @@ checkCommitReadyness() {
     setGlobals 2
 
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_COMPANY_CA \
+        --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
         --signature-policy ${CC_POLICY_2} \
         --name ${CC_NAME_2} --version ${VERSION_2} --sequence ${SEQUENCE_2} --output json 
     echo "===================== checking commit readyness from Productitem ===================== "
 
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_COMPANY_CA \
+        --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
         --signature-policy ${CC_POLICY_3} \
         --name ${CC_NAME_3} --version ${VERSION_3} --sequence ${SEQUENCE_3} --output json 
     echo "===================== checking commit readyness from Company ===================== "
 
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_COMPANY_CA \
+        --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
         --signature-policy ${CC_POLICY_4} \
         --name ${CC_NAME_4} --version ${VERSION_4} --sequence ${SEQUENCE_4} --output json 
     
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_COMPANY_CA \
+        --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
         --signature-policy ${CC_POLICY_5} \
         --name ${CC_NAME_5} --version ${VERSION_5} --sequence ${SEQUENCE_5} --output json 
     echo "===================== checking commit readyness from Customer ===================== "
+
+    peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
+        --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
+        --signature-policy ${CC_POLICY_6} \
+        --name ${CC_NAME_6} --version ${VERSION_6} --sequence ${SEQUENCE_6} --output json 
+    echo "===================== checking commit readyness from HealthCard ===================== "
 }
 
 
@@ -332,39 +400,48 @@ checkCommitReadyness() {
 commitChaincodeDefination() {
     setGlobals 1
     # Commit ProductItem Chaincode
-    peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.certs.com \
+    peer lifecycle chaincode commit -o localhost:13050 --ordererTLSHostnameOverride orderer.certs.com \
         --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
         --channelID $CHANNEL_NAME --name ${CC_NAME_2} \
         --signature-policy ${CC_POLICY_2} \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_COMPANY_CA \
+        --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
+        --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
         --version ${VERSION_2} --sequence ${SEQUENCE_2}
 
     # Commit Company Chaincode
-    peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.certs.com \
+    peer lifecycle chaincode commit -o localhost:13050 --ordererTLSHostnameOverride orderer.certs.com \
         --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
         --channelID $CHANNEL_NAME --name ${CC_NAME_3} \
         --signature-policy ${CC_POLICY_3} \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_COMPANY_CA \
+        --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
+        --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
         --version ${VERSION_3} --sequence ${SEQUENCE_3}
 
     # Commit Customer Chaincode
-    peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.certs.com \
+    peer lifecycle chaincode commit -o localhost:13050 --ordererTLSHostnameOverride orderer.certs.com \
         --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
         --channelID $CHANNEL_NAME --name ${CC_NAME_4} \
         --signature-policy ${CC_POLICY_4} \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_COMPANY_CA \
+        --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
+        --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
         --version ${VERSION_4} --sequence ${SEQUENCE_4}
 
-    peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.certs.com \
+    peer lifecycle chaincode commit -o localhost:13050 --ordererTLSHostnameOverride orderer.certs.com \
         --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
         --channelID $CHANNEL_NAME --name ${CC_NAME_5} \
         --signature-policy ${CC_POLICY_5} \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
-        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_COMPANY_CA \
+        --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
+        --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
         --version ${VERSION_5} --sequence ${SEQUENCE_5}
+
+    # Commit HealthCard Chaincode
+    peer lifecycle chaincode commit -o localhost:13050 --ordererTLSHostnameOverride orderer.certs.com \
+        --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
+        --channelID $CHANNEL_NAME --name ${CC_NAME_6} \
+        --signature-policy ${CC_POLICY_6} \
+        --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
+        --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
+        --version ${VERSION_6} --sequence ${SEQUENCE_6}
 
     if [ $? -ne 0 ]; then
         echo "Error committing chaincodes"
@@ -379,7 +456,6 @@ queryCommitted() {
     peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME
     echo "===================== Query committed chaincodes ===================== "
 }
-
 
 
 #Execute the functions
