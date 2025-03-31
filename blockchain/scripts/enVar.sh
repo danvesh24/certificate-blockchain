@@ -19,6 +19,8 @@ export ORDERER2_ADMIN_TLS_PRIVATE_KEY=${PWD}/../artifacts/channel/crypto-config/
 export ORDERER3_ADMIN_TLS_SIGN_CERT=${PWD}/../artifacts/channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer3.certs.com/tls/server.crt
 export ORDERER3_ADMIN_TLS_PRIVATE_KEY=${PWD}/../artifacts/channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer3.certs.com/tls/server.key
 
+export CORE_PEER_MSPCONFIGPATH=${PWD}/../artifacts/channel/crypto-config/peerOrganizations/superadmin.certs.com/users/Admin@superadmin.certs.com/msp
+
 # Set environment variables for the peer org
 setGlobals() {
   local USING_ORG=""
@@ -32,12 +34,12 @@ setGlobals() {
     export CORE_PEER_LOCALMSPID="SuperadminMSP"
     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_SUPERADMIN_CA
     export CORE_PEER_MSPCONFIGPATH=${PWD}/../artifacts/channel/crypto-config/peerOrganizations/superadmin.certs.com/users/Admin@superadmin.certs.com/msp
-    export CORE_PEER_ADDRESS=localhost:7051
+    export CORE_PEER_ADDRESS=localhost:13051
   elif [ $USING_ORG -eq 2 ]; then
     export CORE_PEER_LOCALMSPID="CompanyMSP"
     export CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_COMPANY_CA
     export CORE_PEER_MSPCONFIGPATH=${PWD}/../artifacts/channel/crypto-config/peerOrganizations/company.certs.com/users/Admin@company.certs.com/msp
-    export CORE_PEER_ADDRESS=localhost:9051
+    export CORE_PEER_ADDRESS=localhost:15051
   else
     errorln "ORG Unknown"
   fi
@@ -58,11 +60,9 @@ setGlobalsCLI() {
     USING_ORG="${OVERRIDE_ORG}"
   fi
   if [ $USING_ORG -eq 1 ]; then
-    export CORE_PEER_ADDRESS=peer0.superadmin.certs.com:7051
+    export CORE_PEER_ADDRESS=peer0.superadmin.certs.com:13051
   elif [ $USING_ORG -eq 2 ]; then
-    export CORE_PEER_ADDRESS=peer0.company.certs.com:9051
-  elif [ $USING_ORG -eq 3 ]; then
-    export CORE_PEER_ADDRESS=peer0.retailer.certs.com:10051
+    export CORE_PEER_ADDRESS=peer0.company.certs.com:15051
   else
     errorln "ORG Unknown"
   fi

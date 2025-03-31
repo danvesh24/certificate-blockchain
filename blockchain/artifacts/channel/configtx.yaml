@@ -34,7 +34,7 @@ Organizations:
 
         AnchorPeers:
             - Host: peer0.superadmin.certs.com
-              Port: 7051
+              Port: 13051
 
     - &Company
         Name: CompanyMSP
@@ -55,7 +55,7 @@ Organizations:
                 Rule: "OR('CompanyMSP.peer')"
         AnchorPeers:
             - Host: peer0.company.certs.com
-              Port: 9051
+              Port: 15051
 
 
 Capabilities:
@@ -208,12 +208,12 @@ Orderer: &OrdererDefaults
     EtcdRaft:
         Consenters:
         - Host: orderer.certs.com
-          Port: 7050
+          Port: 13050
           ClientTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/tls/server.crt
           ServerTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/tls/server.crt
 
     Addresses:
-        - orderer.certs.com:7050
+        - orderer.certs.com:13050
 
     BatchTimeout: 2s
 
@@ -262,21 +262,21 @@ Profiles:
             EtcdRaft:
                 Consenters:
                 - Host: orderer.certs.com
-                  Port: 7050
+                  Port: 13050
                   ClientTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/tls/server.crt
                   ServerTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/tls/server.crt
                 - Host: orderer2.certs.com
-                  Port: 7050
+                  Port: 13050
                   ClientTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer2.certs.com/tls/server.crt
                   ServerTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer2.certs.com/tls/server.crt
                 - Host: orderer3.certs.com
-                  Port: 7050
+                  Port: 13050
                   ClientTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer3.certs.com/tls/server.crt
                   ServerTLSCert: crypto-config/ordererOrganizations/certs.com/orderers/orderer3.certs.com/tls/server.crt
             Addresses:
-                - orderer.certs.com:7050
-                - orderer2.certs.com:7050
-                - orderer3.certs.com:7050
+                - orderer.certs.com:13050
+                - orderer2.certs.com:13050
+                - orderer3.certs.com:13050
             Organizations:
                 - *OrdererOrg
             Capabilities: *OrdererCapabilities

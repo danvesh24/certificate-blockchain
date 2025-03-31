@@ -335,7 +335,7 @@ func (cc *CertificateContract) ChangeCertificateStatus(APIstub shim.ChaincodeStu
 }
 
 // GetCertificateWithHash retrieves certificates by their IDs and returns their block hash information
-func (cc *CertificateContract) GetCertificateWithHash(APIstub shim.ChaincodeStubInterface, ids []string) peer.Response {
+func (cc *CertificateContract) GetCertificateWithHashes(APIstub shim.ChaincodeStubInterface, ids []string) peer.Response {
 	var certificateHashes []map[string]interface{}
 
 	for _, idStr := range ids {
@@ -667,7 +667,7 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		if len(args) == 0 {
 			return shim.Error("Incorrect number of arguments. Expecting at least one certificate ID.")
 		}
-		return cc.GetCertificateWithHash(APIstub, args)
+		return cc.GetCertificateWithHashes(APIstub, args)
 
 	default:
 		return shim.Error("Invalid function name")

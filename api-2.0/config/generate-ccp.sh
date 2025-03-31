@@ -18,9 +18,9 @@ function json_ccp {
 
 ORG="Superadmin"
 low_org="superadmin"
-P0PORT=7051
-CAPORT=7054
-PEERPEM=../../blockchain/artifacts/channel/crypto-config/peerOrganizations/superadmin.certs.com/peers/peer0.superadmin.certs.com/tls/tlscacerts/tls-localhost-7054-ca-superadmin-certs-com.pem
+P0PORT=13051
+CAPORT=13054
+PEERPEM=../../blockchain/artifacts/channel/crypto-config/peerOrganizations/superadmin.certs.com/peers/peer0.superadmin.certs.com/tls/tlscacerts/tls-localhost-13054-ca-superadmin-certs-com.pem
 CAPEM=../../blockchain/artifacts/channel/crypto-config/peerOrganizations/superadmin.certs.com/msp/tlscacerts/ca.crt
 
 echo "$(json_ccp $ORG $P0PORT $CAPORT $PEERPEM $CAPEM $low_org)" > connection-superadmin.json
@@ -28,9 +28,9 @@ echo "$(json_ccp $ORG $P0PORT $CAPORT $PEERPEM $CAPEM $low_org)" > connection-su
 
 ORG="Company"
 low_org="company"
-P0PORT=9051
-CAPORT=8054
-PEERPEM=../../blockchain/artifacts/channel/crypto-config/peerOrganizations/company.certs.com/peers/peer0.company.certs.com/tls/tlscacerts/tls-localhost-8054-ca-company-certs-com.pem
+P0PORT=15051
+CAPORT=14054
+PEERPEM=../../blockchain/artifacts/channel/crypto-config/peerOrganizations/company.certs.com/peers/peer0.company.certs.com/tls/tlscacerts/tls-localhost-14054-ca-company-certs-com.pem
 CAPEM=../../blockchain/artifacts/channel/crypto-config/peerOrganizations/company.certs.com/msp/tlscacerts/ca.crt
 
 echo "$(json_ccp $ORG $P0PORT $CAPORT $PEERPEM $CAPEM $low_org)" > connection-company.json

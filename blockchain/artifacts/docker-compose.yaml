@@ -1,7 +1,7 @@
 version: "2.1"
 
 networks:
-  test:
+  network1:
 
 services:
   orderer.certs.com:
@@ -31,17 +31,17 @@ services:
       - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
       - ORDERER_METRICS_PROVIDER=prometheus
 
-      - ORDERER_GENERAL_LISTENPORT=7050
-      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:7053
-      - ORDERER_OPERATIONS_LISTENADDRESS=orderer.certs.com:8443
+      - ORDERER_GENERAL_LISTENPORT=13050
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:13053
+      - ORDERER_OPERATIONS_LISTENADDRESS=orderer.certs.com:14443
     working_dir: /root
     command: orderer
     ports:
-      - 7050:7050
-      - 7053:7053
-      - 8443:8443
+      - 13050:13050
+      - 13053:13053
+      - 14443:14443
     networks:
-      - test
+      - network1
     volumes:
       - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/msp:/var/hyperledger/orderer/msp
       - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer.certs.com/tls:/var/hyperledger/orderer/tls
@@ -73,18 +73,18 @@ services:
       - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
       - ORDERER_METRICS_PROVIDER=prometheus
 
-      - ORDERER_GENERAL_LISTENPORT=7050
-      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:8053
-      - ORDERER_OPERATIONS_LISTENADDRESS=orderer2.certs.com:8443
+      - ORDERER_GENERAL_LISTENPORT=13050
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:14053
+      - ORDERER_OPERATIONS_LISTENADDRESS=orderer2.certs.com:14443
 
     working_dir: /root
     command: orderer
     ports:
-      - 8050:7050
-      - 8053:8053
-      - 8444:8443
+      - 14050:13050
+      - 14053:14053
+      - 14444:14443
     networks:
-      - test
+      - network1
     volumes:
       - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer2.certs.com/msp:/var/hyperledger/orderer/msp
       - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer2.certs.com/tls:/var/hyperledger/orderer/tls
@@ -115,53 +115,42 @@ services:
       - ORDERER_ADMIN_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
       - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
       - ORDERER_METRICS_PROVIDER=prometheus
-      - ORDERER_GENERAL_LISTENPORT=7050
-      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:9053
-      - ORDERER_OPERATIONS_LISTENADDRESS=orderer3.certs.com:8443
+      - ORDERER_GENERAL_LISTENPORT=13050
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:15053
+      - ORDERER_OPERATIONS_LISTENADDRESS=orderer3.certs.com:14443
     working_dir: /root
     command: orderer
     ports:
-      - 9050:7050
-      - 9053:9053
-      - 8445:8443
+      - 15050:13050
+      - 15053:15053
+      - 14445:14443
     networks:
-      - test
+      - network1
     volumes:
       - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer3.certs.com/msp:/var/hyperledger/orderer/msp
       - ./channel/crypto-config/ordererOrganizations/certs.com/orderers/orderer3.certs.com/tls:/var/hyperledger/orderer/tls
 
-  couchdb0:
-    container_name: couchdb0
+  couchdb3:
+    container_name: couchdb3
     image: couchdb:3.1.1
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=adminpw
     ports:
-      - 5984:5984
+      - 8984:5984
     networks:
-      - test
+      - network1
 
-  couchdb1:
-    container_name: couchdb1
+  couchdb4:
+    container_name: couchdb4
     image: couchdb:3.1.1
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=adminpw
     ports:
-      - 6984:5984
+      - 9984:5984
     networks:
-      - test
-
-  couchdb2:
-    container_name: couchdb2
-    image: couchdb:3.1.1
-    environment:
-      - COUCHDB_USER=admin
-      - COUCHDB_PASSWORD=adminpw
-    ports:
-      - 7984:5984
-    networks:
-      - test
+      - network1
 
   peer0.superadmin.certs.com:
     container_name: peer0.superadmin.certs.com
@@ -173,22 +162,22 @@ services:
       - FABRIC_LOGGING_SPEC=info
       - ORDERER_GENERAL_LOGLEVEL=info
       - CORE_PEER_LOCALMSPID=SuperadminMSP
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_test
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_network1
 
       - CORE_PEER_ID=peer0.superadmin.certs.com
-      - CORE_PEER_ADDRESS=peer0.superadmin.certs.com:7051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.superadmin.certs.com:7052
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_ADDRESS=peer0.superadmin.certs.com:13051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:13051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.superadmin.certs.com:13052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:13052
       # Peer used to bootstrap gossip within organisation
-      # - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.superadmin.certs.com:8051
+      # - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.superadmin.certs.com:14051
       # Exposed for discovery Service
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.superadmin.certs.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.superadmin.certs.com:13051
 
       # - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9440
 
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb0:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb3:5984
       - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
 
@@ -198,17 +187,17 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
     depends_on:
-      - couchdb0
+      - couchdb3
     ports:
-      - 7051:7051
+      - 13051:13051
     volumes:
       - ./channel/crypto-config/peerOrganizations/superadmin.certs.com/peers/peer0.superadmin.certs.com:/etc/hyperledger/fabric
       - /var/run/:/host/var/run/
     networks:
-      - test
+      - network1
 
 
-  peer0.company..com:
+  peer0.company.certs.com:
     container_name: peer0.company.certs.com
     image: hyperledger/fabric-peer:2.5.0
     labels:
@@ -219,19 +208,19 @@ services:
       - ORDERER_GENERAL_LOGLEVEL=info
       - CORE_PEER_LOCALMSPID=CompanyMSP
 
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_test
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_network1
 
       - CORE_PEER_ID=peer0.company.certs.com
-      - CORE_PEER_ADDRESS=peer0.company.certs.com:9051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:9051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.company.certs.com:9052
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:9052
+      - CORE_PEER_ADDRESS=peer0.company.certs.com:15051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:15051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.company.certs.com:15052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:15052
       # Exposed for discovery Service
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.company.certs.com:9051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.company.certs.com:15051
       # - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.company.example.com:10051
 
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb1:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb4:5984
       - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
       # - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9440
@@ -241,49 +230,11 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
     ports:
-      - 9051:9051
+      - 15051:15051
     volumes:
       - ./channel/crypto-config/peerOrganizations/company.certs.com/peers/peer0.company.certs.com:/etc/hyperledger/fabric
       - /var/run/:/host/var/run/
     networks:
-      - test
+      - network1
 
-  peer0.retailer.certs.com:
-    container_name: peer0.retailer.certs.com
-    image: hyperledger/fabric-peer:2.5.0
-    labels:
-      service: hyperledger-fabric
-    environment:
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - FABRIC_LOGGING_SPEC=info
-      - ORDERER_GENERAL_LOGLEVEL=info
-      - CORE_PEER_LOCALMSPID=RetailerMSP
-
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_test
-
-      - CORE_PEER_ID=peer0.retailer.certs.com
-      - CORE_PEER_ADDRESS=peer0.retailer.certs.com:10051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:10051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.retailer.certs.com:10052
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:10052
-      # Exposed for discovery Service
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.retailer.certs.com:10051
-      # - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.company.example.com:10051
-
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb2:5984
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=admin
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=adminpw
-      # - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9440
-      - CORE_PEER_TLS_ENABLED=true
-      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
-      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
-    ports:
-      - 10051:10051
-    volumes:
-      - ./channel/crypto-config/peerOrganizations/retailer.certs.com/peers/peer0.retailer.certs.com:/etc/hyperledger/fabric
-      - /var/run/:/host/var/run/
-    networks:
-      - test
+  
