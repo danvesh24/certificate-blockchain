@@ -4,13 +4,13 @@
 . enVar.sh
 . utils.sh
 
-# Function to vendor Go dependencies for Product, Company, and Customer chaincodes
+# Function to vendor Go dependencies for Certificate, Company, and Customer chaincodes
 presetup() {
-    echo "Vendoring Go dependencies for Product, Company, and Customer chaincodes..."
+    echo "Vendoring Go dependencies for Certificate, Company, and Customer chaincodes..."
     
-    # Product Chaincode
-    pushd ../artifacts/src/github.com/chaincodes/go/Product/
-    go mod init github.com/chaincodes/go/Product
+    # Certificate Chaincode
+    pushd ../artifacts/src/github.com/chaincodes/go/Certificate/
+    go mod init github.com/chaincodes/go/Certificate
     go mod tidy 
     GO111MODULE=on go mod vendor
     popd
@@ -43,12 +43,12 @@ presetup() {
     GO111MODULE=on go mod vendor
     popd
 
-    echo "Finished vendoring Go dependencies for Product, Company, and Customer chaincodes"
+    echo "Finished vendoring Go dependencies for Certificate, Company, and Customer chaincodes"
 }
 
 # Chaincode variables
 CC_NAME_2="Certificate"
-CC_SRC_PATH_2="../artifacts/src/github.com/chaincodes/go/Product/"
+CC_SRC_PATH_2="../artifacts/src/github.com/chaincodes/go/Certificate/"
 CC_POLICY_2="OR('SuperadminMSP.peer','CompanyMSP.peer')"
 CC_RUNTIME_LANGUAGE_2="golang"
 VERSION_2="1"
@@ -86,7 +86,7 @@ CHANNEL_NAME="mychannel"
 
 # Package Chaincodes
 packageChaincode() {
-    # For ProductItem Chaincode
+    # For CertificateItem Chaincode
     rm -rf ${CC_NAME_2}.tar.gz
     peer lifecycle chaincode package ${CC_NAME_2}.tar.gz \
         --path ${CC_SRC_PATH_2} --lang ${CC_RUNTIME_LANGUAGE_2} \
@@ -124,23 +124,23 @@ packageChaincode() {
 
 # Install Chaincodes
 installChaincode() {
-    # For Org1, ProductItem Chaincode
+    # For Org1, CertificateItem Chaincode
     setGlobals 1
     peer lifecycle chaincode install ${CC_NAME_2}.tar.gz
     if [ $? -ne 0 ]; then
-        echo "Error installing productitem chaincode"
+        echo "Error installing certificateitem chaincode"
         exit 1
     fi
-    echo "===================== Productitem chaincode installed ===================== "
+    echo "===================== Certificateitem chaincode installed ===================== "
 
-    # For Org2, ProductItem Chaincode
+    # For Org2, CertificateItem Chaincode
     setGlobals 2
     peer lifecycle chaincode install ${CC_NAME_2}.tar.gz
     if [ $? -ne 0 ]; then
-        echo "Error installing productitem chaincode on Org2"
+        echo "Error installing certificateitem chaincode on Org2"
         exit 1
     fi
-    echo "===================== Productitem chaincode installed on peer0.company ===================== "
+    echo "===================== Certificateitem chaincode installed on peer0.company ===================== "
 
     # For Org1, Company Chaincode
     setGlobals 1
@@ -229,7 +229,7 @@ queryInstalled() {
 
 # Approve Chaincodes for Org1
 approveForMyOrg1() {
-    # Approve ProductItem Chaincode for Org1
+    # Approve CertificateItem Chaincode for Org1
     setGlobals 1
     peer lifecycle chaincode approveformyorg -o localhost:13050 \
         --ordererTLSHostnameOverride orderer.certs.com --tls \
@@ -284,7 +284,7 @@ checkCommitReadyness() {
         --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
         --signature-policy ${CC_POLICY_2} \
         --name ${CC_NAME_2} --version ${VERSION_2} --sequence ${SEQUENCE_2} --output json 
-    echo "===================== checking commit readyness from Productitem ===================== "
+    echo "===================== checking commit readyness from Certificateitem ===================== "
 
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
         --peerAddresses localhost:13051 --tlsRootCertFiles $PEER0_SUPERADMIN_CA \
@@ -316,7 +316,7 @@ checkCommitReadyness() {
 approveForMyOrg2() {
     setGlobals 2
 
-    # Approve ProductItem Chaincode for Org2
+    # Approve CertificateItem Chaincode for Org2
     peer lifecycle chaincode approveformyorg -o localhost:13050 \
         --ordererTLSHostnameOverride orderer.certs.com --tls \
         --signature-policy ${CC_POLICY_2} \
@@ -369,7 +369,7 @@ checkCommitReadyness() {
         --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
         --signature-policy ${CC_POLICY_2} \
         --name ${CC_NAME_2} --version ${VERSION_2} --sequence ${SEQUENCE_2} --output json 
-    echo "===================== checking commit readyness from Productitem ===================== "
+    echo "===================== checking commit readyness from Certificateitem ===================== "
 
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
         --peerAddresses localhost:15051 --tlsRootCertFiles $PEER0_COMPANY_CA \
@@ -399,7 +399,7 @@ checkCommitReadyness() {
 # Commit Chaincodes
 commitChaincodeDefination() {
     setGlobals 1
-    # Commit ProductItem Chaincode
+    # Commit CertificateItem Chaincode
     peer lifecycle chaincode commit -o localhost:13050 --ordererTLSHostnameOverride orderer.certs.com \
         --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA \
         --channelID $CHANNEL_NAME --name ${CC_NAME_2} \

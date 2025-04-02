@@ -350,6 +350,32 @@ func (h *HealthCardContract) EditHealthCard(
 	return nil
 }
 
+func (h *HealthCardContract) QueryAllHealthCards(APIstub shim.ChaincodeStubInterface) ([]HealthCard, error) {
+	resultsIterator, err := APIstub.GetStateByRange("", "")
+	if err != nil {
+		return nil, fmt.Errorf("failed to get state by range: %v", err)
+	}
+	defer resultsIterator.Close()
+
+	var healthCards []HealthCard
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return nil, fmt.Errorf("failed to iterate over results: %v", err)
+		}
+
+		var healthCard HealthCard
+		err = json.Unmarshal(queryResponse.Value, &healthCard)
+		if err != nil {
+			return nil, fmt.Errorf("failed to unmarshal health card data: %v", err)
+		}
+
+		healthCards = append(healthCards, healthCard)
+	}
+
+	return healthCards, nil
+}
+
 func (h *HealthCardContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Response {
 	function, args := APIstub.GetFunctionAndParameters()
 
@@ -386,7 +412,7 @@ func (h *HealthCardContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Re
 		var healthcardManufacturer HealthCardManufacturer
 		err = json.Unmarshal([]byte(args[22]), &healthcardManufacturer)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid certificateManufacturer JSON: %cc", args[22]))
+			return shim.Error(fmt.Sprintf("Invalid certificateManufacturer JSON: %s", args[22]))
 		}
 
 		err = h.CreateHealthCard(
@@ -559,6 +585,18 @@ func (h *HealthCardContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.Re
 			return shim.Error(fmt.Sprintf("Failed to marshal response: %v", err))
 		}
 		return shim.Success(responseJSON)
+
+	case "QueryAllHealthCards":
+		healthCards, err := h.QueryAllHealthCards(APIstub)
+		if err != nil {
+			return shim.Error(fmt.Sprintf("Failed to query all health cards: %s", err.Error()))
+		}
+
+		healthCardsJSON, err := json.Marshal(healthCards)
+		if err != nil {
+			return shim.Error(fmt.Sprintf("Failed to marshal health cards data: %v", err))
+		}
+		return shim.Success(healthCardsJSON)
 
 	default:
 		return shim.Error(fmt.Sprintf("Invalid function name: %s", function))

@@ -58,7 +58,7 @@ const getWalletPath = async (org) => {
 
 
 const getAffiliation = async (org) => {
-    return org == "Superadmin" ? 'org1.department1' : 'org2.department1'
+    return org == "Superadmin" ? "org1.department1" : "org2.department1"
 }
 
 
@@ -257,6 +257,7 @@ const enrollAdmin = async (org, ccp) => {
 const registerAndGerSecret = async (userid, userOrg) => {
     let ccp = await getCCP(userOrg);
     const caURL = await getCaUrl(userOrg, ccp);
+    console.log('CA URL:', caURL);
     const ca = new FabricCAServices(caURL);
     const walletPath = await getWalletPath(userOrg);
     const wallet = await Wallets.newFileSystemWallet(walletPath);

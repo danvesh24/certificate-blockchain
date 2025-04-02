@@ -89,7 +89,7 @@ func (cc *CertificateContract) CreateCertificate(APIstub shim.ChaincodeStubInter
 		return fmt.Errorf("failed to check if certificate exists: %v", err)
 	}
 	if certificateAsBytes != nil {
-		return fmt.Errorf("certificate with ID %cc already exists", id.Hex())
+		return fmt.Errorf("certificate with ID %s already exists", id.Hex())
 	}
 
 	if certificateValidDate == "" {
@@ -197,7 +197,7 @@ func (cc *CertificateContract) QueryCertificate(APIstub shim.ChaincodeStubInterf
 		return nil, fmt.Errorf("failed to read certificate: %v", err)
 	}
 	if certificateAsBytes == nil {
-		return nil, fmt.Errorf("certificate not found: %cc", id.Hex())
+		return nil, fmt.Errorf("certificate not found: %s", id.Hex())
 	}
 
 	var certificate Certificate
@@ -306,11 +306,11 @@ func (cc *CertificateContract) ChangeCertificateStatus(APIstub shim.ChaincodeStu
 
 	certificate, err := cc.QueryCertificate(APIstub, id)
 	if err != nil {
-		return fmt.Errorf("certificate not found: %cc", id.Hex())
+		return fmt.Errorf("certificate not found: %s", id.Hex())
 	}
 
 	if certificate.CertificateStatus == newStatus {
-		return fmt.Errorf("certificate is already in the desired status: %cc", newStatus)
+		return fmt.Errorf("certificate is already in the desired status: %s", newStatus)
 	}
 
 	certificate.CertificateStatus = newStatus
@@ -341,7 +341,7 @@ func (cc *CertificateContract) GetCertificateWithHashes(APIstub shim.ChaincodeSt
 	for _, idStr := range ids {
 		id, err := primitive.ObjectIDFromHex(idStr)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid certificate ID: %cc", idStr))
+			return shim.Error(fmt.Sprintf("Invalid certificate ID: %s", idStr))
 		}
 		certificate, err := cc.QueryCertificate(APIstub, id)
 		if err != nil {
@@ -355,7 +355,7 @@ func (cc *CertificateContract) GetCertificateWithHashes(APIstub shim.ChaincodeSt
 
 		certificateBytes, err := json.Marshal(certificate)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Failed to marshal certificate data for ID %cc: %v", id.Hex(), err))
+			return shim.Error(fmt.Sprintf("Failed to marshal certificate data for ID %s: %v", id.Hex(), err))
 		}
 
 		hash := sha256.New()
@@ -388,7 +388,7 @@ func (cc *CertificateContract) QueryCertificatesByIDs(APIstub shim.ChaincodeStub
 		// Retrieve the certificate from the ledger using the provided ID
 		certificateAsBytes, err := APIstub.GetState(ID.Hex())
 		if err != nil {
-			return nil, fmt.Errorf("failed to read certificate with ID %cc: %v", ID.Hex(), err)
+			return nil, fmt.Errorf("failed to read certificate with ID %s: %v", ID.Hex(), err)
 		}
 
 		// Check if the certificate exists
@@ -403,7 +403,7 @@ func (cc *CertificateContract) QueryCertificatesByIDs(APIstub shim.ChaincodeStub
 			var certificate Certificate
 			err = json.Unmarshal(certificateAsBytes, &certificate)
 			if err != nil {
-				return nil, fmt.Errorf("failed to unmarshal certificate with ID %cc: %v", ID.Hex(), err)
+				return nil, fmt.Errorf("failed to unmarshal certificate with ID %s: %v", ID.Hex(), err)
 			}
 
 			// Append the certificate result (ID and BlockHash)
@@ -431,33 +431,33 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		// Parse certificateRefNum
 		certificateRefNum, err := strconv.Atoi(args[3])
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid certificateRefNum: %cc", args[3]))
+			return shim.Error(fmt.Sprintf("Invalid certificateRefNum: %s", args[3]))
 		}
 
 		// Parse ID
 		id, err := primitive.ObjectIDFromHex(args[0])
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid ID: %cc", args[0]))
+			return shim.Error(fmt.Sprintf("Invalid ID: %s", args[0]))
 		}
 
 		// Parse phone
 		phone, err := strconv.Atoi(args[8])
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid phone: %cc", args[8]))
+			return shim.Error(fmt.Sprintf("Invalid phone: %s", args[8]))
 		}
 
 		// Parse certificateImages
 		var certificateImages []CertificateImages
 		err = json.Unmarshal([]byte(args[11]), &certificateImages)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid certificateImages JSON: %cc", args[11]))
+			return shim.Error(fmt.Sprintf("Invalid certificateImages JSON: %s", args[11]))
 		}
 
 		// Parse CertificateManufacturer
 		var certificateManufacturer CertificateManufacturer
 		err = json.Unmarshal([]byte(args[7]), &certificateManufacturer)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid certificateManufacturer JSON: %cc", args[7]))
+			return shim.Error(fmt.Sprintf("Invalid certificateManufacturer JSON: %s", args[7]))
 		}
 
 		err = cc.CreateCertificate(
@@ -480,7 +480,7 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 			args[15],
 		)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Failed to create certificate: %cc", err.Error()))
+			return shim.Error(fmt.Sprintf("Failed to create certificate: %s", err.Error()))
 		}
 
 		txID := APIstub.GetTxID()
@@ -508,33 +508,33 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		// Parse certificateRefNum
 		certificateRefNum, err := strconv.Atoi(args[3])
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid certificateRefNum: %cc", args[3]))
+			return shim.Error(fmt.Sprintf("Invalid certificateRefNum: %s", args[3]))
 		}
 
 		// Parse ID
 		id, err := primitive.ObjectIDFromHex(args[0])
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid ID: %cc", args[0]))
+			return shim.Error(fmt.Sprintf("Invalid ID: %s", args[0]))
 		}
 
 		// Parse phone
 		phone, err := strconv.Atoi(args[8])
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid phone: %cc", args[8]))
+			return shim.Error(fmt.Sprintf("Invalid phone: %s", args[8]))
 		}
 
 		// Parse certificateImages
 		var certificateImages []CertificateImages
 		err = json.Unmarshal([]byte(args[11]), &certificateImages)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid certificateImages JSON: %cc", args[11]))
+			return shim.Error(fmt.Sprintf("Invalid certificateImages JSON: %s", args[11]))
 		}
 
 		// Parse CertificateManufacturer
 		var certificateManufacturer CertificateManufacturer
 		err = json.Unmarshal([]byte(args[7]), &certificateManufacturer)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid certificateManufacturer JSON: %cc", args[7]))
+			return shim.Error(fmt.Sprintf("Invalid certificateManufacturer JSON: %s", args[7]))
 		}
 
 		err = cc.EditCertificate(
@@ -557,7 +557,7 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 			args[15],
 		)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Failed to edit certificate: %cc", err.Error()))
+			return shim.Error(fmt.Sprintf("Failed to edit certificate: %s", err.Error()))
 		}
 
 		txID := APIstub.GetTxID()
@@ -586,7 +586,7 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		for _, arg := range args {
 			ID, err := primitive.ObjectIDFromHex(arg)
 			if err != nil {
-				return shim.Error(fmt.Sprintf("Invalid ID: %cc", arg))
+				return shim.Error(fmt.Sprintf("Invalid ID: %s", arg))
 			}
 			IDs = append(IDs, ID)
 		}
@@ -594,13 +594,13 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		// Call QueryCertificatesByIDs function to return id and blockHash for each ID
 		certificatesResult, err := cc.QueryCertificatesByIDs(APIstub, IDs)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Failed to query certificates: %c", err.Error()))
+			return shim.Error(fmt.Sprintf("Failed to query certificates: %s", err.Error()))
 		}
 
 		// Marshal the result (user ID and blockHash for each) to JSON
 		certificatesAsBytes, err := json.Marshal(certificatesResult)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Failed to marshal certificates: %c", err.Error()))
+			return shim.Error(fmt.Sprintf("Failed to marshal certificates: %s", err.Error()))
 		}
 
 		return shim.Success(certificatesAsBytes)
@@ -611,26 +611,26 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		}
 		id, err := primitive.ObjectIDFromHex(args[0])
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid ID: %cc", args[0]))
+			return shim.Error(fmt.Sprintf("Invalid ID: %s", args[0]))
 		}
 		certificate, err := cc.QueryCertificate(APIstub, id)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Failed to query certificate: %cc", err.Error()))
+			return shim.Error(fmt.Sprintf("Failed to query certificate: %s", err.Error()))
 		}
 		certificateAsBytes, err := json.Marshal(certificate)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Failed to marshal certificate: %cc", err.Error()))
+			return shim.Error(fmt.Sprintf("Failed to marshal certificate: %s", err.Error()))
 		}
 		return shim.Success(certificateAsBytes)
 
 	case "QueryAllCertificates":
 		certificates, err := cc.QueryAllCertificates(APIstub)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Failed to query all certificates: %cc", err.Error()))
+			return shim.Error(fmt.Sprintf("Failed to query all certificates: %s", err.Error()))
 		}
 		certificatesAsBytes, err := json.Marshal(certificates)
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Failed to marshal certificates: %cc", err.Error()))
+			return shim.Error(fmt.Sprintf("Failed to marshal certificates: %s", err.Error()))
 		}
 		return shim.Success(certificatesAsBytes)
 
@@ -640,11 +640,11 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 		}
 		id, err := primitive.ObjectIDFromHex(args[0])
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Invalid ID: %cc", args[0]))
+			return shim.Error(fmt.Sprintf("Invalid ID: %s", args[0]))
 		}
 		err = cc.ChangeCertificateStatus(APIstub, id, args[1])
 		if err != nil {
-			return shim.Error(fmt.Sprintf("Failed to change certificate status: %cc", err.Error()))
+			return shim.Error(fmt.Sprintf("Failed to change certificate status: %s", err.Error()))
 		}
 		txID := APIstub.GetTxID()
 		txTimestamp, err := APIstub.GetTxTimestamp()
@@ -677,6 +677,6 @@ func (cc *CertificateContract) Invoke(APIstub shim.ChaincodeStubInterface) peer.
 func main() {
 	err := shim.Start(new(CertificateContract))
 	if err != nil {
-		logger.Fatalf("Error starting Certificate contract chaincode: %cc", err)
+		logger.Fatalf("Error starting Certificate contract chaincode: %s", err)
 	}
 }
