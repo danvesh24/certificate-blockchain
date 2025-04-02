@@ -115,7 +115,10 @@ const query = async (channelName, chaincodeName, args, fcn, username, org_name) 
         } else if (fcn == "QueryHealthCardsByIDs") {
             result = await contract.evaluateTransaction(fcn, ...args);
             console.log("---");
-        }
+        } else if (fcn == "QueryAllHealthCards") {
+            result = await contract.evaluateTransaction(fcn);
+            console.log("---");
+        } 
         console.log(result)
         console.log(`Transaction has been evaluated, result is: ${result.toString()}`);
 
